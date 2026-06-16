@@ -198,51 +198,61 @@ Struktur mental (JANGAN tulis label ini di output):
 - Sebutkan teknik yang dipakai: Social Proof, Curiosity Gap, atau Authority.`;
 
 export const CONFIG = {
-  API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
-  MODEL: 'Gemini 2.5 Flash',
+  API_URL: 'https://apihub.agnes-ai.com/v1/chat/completions',
+  MODEL: 'agnes-2.0-flash',
   TEMPERATURE: 0.7,
   MAX_TOKENS: 2048,
 };
 
 export function getApiKey() {
-  return localStorage.getItem('gemini_api_key') || '';
+  if (typeof window === 'undefined') return '';
+  return localStorage.getItem('agnes_api_key') || localStorage.getItem('gemini_api_key') || '';
 }
 
 export function saveApiKey(key) {
-  localStorage.setItem('gemini_api_key', key.trim());
+  if (typeof window === 'undefined') return;
+  localStorage.setItem('agnes_api_key', key.trim());
 }
 
 export function getLanguage() {
+  if (typeof window === 'undefined') return 'auto';
   return localStorage.getItem('reply_language') || 'auto';
 }
 
 export function saveLanguage(lang) {
+  if (typeof window === 'undefined') return;
   localStorage.setItem('reply_language', lang);
 }
 
 export function getTemperature() {
+  if (typeof window === 'undefined') return 0.7;
   const val = localStorage.getItem('reply_temperature');
   return val !== null ? parseFloat(val) : 0.7;
 }
 
 export function saveTemperature(temp) {
+  if (typeof window === 'undefined') return;
   localStorage.setItem('reply_temperature', temp.toString());
 }
 
 export function getReplyCount() {
+  if (typeof window === 'undefined') return 5;
   const val = localStorage.getItem('reply_count');
   return val !== null ? Math.max(2, Math.min(10, parseInt(val, 10))) : 5;
 }
 
 export function saveReplyCount(count) {
+  if (typeof window === 'undefined') return;
   localStorage.setItem('reply_count', Math.max(2, Math.min(10, count)).toString());
 }
 
 export function getTheme() {
+  if (typeof window === 'undefined') return 'santai';
   return localStorage.getItem('reply_theme') || 'santai';
 }
 
 export function saveTheme(theme) {
+  if (typeof window === 'undefined') return;
   localStorage.setItem('reply_theme', theme);
 }
 
