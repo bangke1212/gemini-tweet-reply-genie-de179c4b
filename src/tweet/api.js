@@ -309,26 +309,21 @@ export async function generateReply(tweetText, apiKey, options = {}) {
   }
 
   const response = await fetch(
-  `${CONFIG.API_URL}?key=${apiKey}`,
+  CONFIG.API_URL,
   {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      contents: [
-        {
-          parts: [
-            {
-              text: `${SYSTEM_PROMPT}\n\n${userMessage}`
-            }
-          ]
-        }
+      model: CONFIG.MODEL,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: userMessage },
       ],
-      generationConfig: {
-        temperature,
-        maxOutputTokens: CONFIG.MAX_TOKENS
-      }
+      temperature,
+      max_tokens: CONFIG.MAX_TOKENS,
     })
   }
 );
@@ -354,7 +349,9 @@ export async function generateReply(tweetText, apiKey, options = {}) {
 
   const data = await response.json();
   const rawContent =
-    data.candidates?.[0]?.content?.parts?.map((p) => p.text).join('') || '';
+    data.choices?.[0]?.message?.content ||
+    data.choices?.[0]?.text ||
+    '';
 
   if (!rawContent) {
     throw new Error('The API returned an empty response. Try a different tweet.');
