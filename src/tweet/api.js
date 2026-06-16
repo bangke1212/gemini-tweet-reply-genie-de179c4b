@@ -198,7 +198,7 @@ Struktur mental (JANGAN tulis label ini di output):
 - Sebutkan teknik yang dipakai: Social Proof, Curiosity Gap, atau Authority.`;
 
 export const CONFIG = {
-  API_URL: 'https://https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+  API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
   MODEL: 'Gemini 2.5 Flash',
   TEMPERATURE: 0.7,
   MAX_TOKENS: 2048,
@@ -323,24 +323,28 @@ export async function generateReply(tweetText, apiKey, options = {}) {
   }
 );
 
-  if (!response.ok) {const data = await response.json();
-
-const rawContent =
-  data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-
+  if (!response.ok) {
+    let msg = '';
+    try {
+      const errData = await response.json();
+      msg = errData?.error?.message || '';
+    } catch {
+      msg = await response.text().catch(() => '');
+    }
     if (response.status === 401) {
       throw new Error('Invalid API key. Check your key in settings.');
     } else if (response.status === 429) {
       throw new Error('Rate limited. Please wait a moment and try again.');
-    } else if (response.status === 402) {
-      throw new Error('Insufficient balance on your DeepSeek account.');
+    } else if (response.status === 400) {
+      throw new Error(`Bad request: ${msg}`);
     } else {
       throw new Error(`API Error (${response.status}): ${msg}`);
     }
   }
 
   const data = await response.json();
-  const rawContent = data.choices?.[0]?.message?.content || '';
+  const rawContent =
+    data.candidates?.[0]?.content?.parts?.map((p) => p.text).join('') || '';
 
   if (!rawContent) {
     throw new Error('The API returned an empty response. Try a different tweet.');
