@@ -119,11 +119,11 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
           <div className={styles.howTo}>
             <div className={styles.howToTitle}>Cara mendapatkan API Key</div>
             <ol className={styles.steps}>
-              <li>Buka <a href="https://platform.deepseek.com" target="_blank" rel="noopener noreferrer" className={styles.link}>platform.deepseek.com</a></li>
-              <li>Daftar atau login ke akun DeepSeek</li>
+              <li>Buka <a href="https://platform.agnes-ai.com/settings/apiKeys" target="_blank" rel="noopener noreferrer" className={styles.link}>platform.agnes-ai.com/settings/apiKeys</a></li>
+              <li>Daftar atau login ke akun Agnes AI</li>
               <li>Buka menu <strong>API Keys</strong></li>
               <li>Klik <strong>Create New Key</strong>, copy key-nya</li>
-              <li>Paste key di atas, lalu klik Save</li>
+              <li>Paste key di atas, lalu klik Save (model: <strong>agnes-2.0-flash</strong>)</li>
             </ol>
           </div>
         </div>
