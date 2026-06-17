@@ -485,41 +485,6 @@ export function parseResponse(rawText) {
     raw: rawText,
   };
 
-  // Shared cleanup helper used for both extraction paths
-  function cleanReplyText(text) {
-    return text
-      .trim()
-      // Strip outer quotes
-      .replace(/^["'\u201C\u201D\u2018\u2019`]+|["'\u201C\u201D\u2018\u2019`]+$/g, '')
-      // Strip "Opsi X:", "Reply X:", "Option X:" prefix
-      .replace(/^(?:Opsi|Reply|Option)\s*\d+[.:)\-\s]*/gi, '')
-      // Strip bold markdown **text** → text
-      .replace(/\*\*(.+?)\*\*/g, '$1')
-      // Strip italic markdown *text* → text
-      .replace(/(?<!\\)\*(.+?)\*/g, '$1')
-      // Strip heading markers at start of lines
-      .replace(/^#{1,4}\s+/gm, '')
-      // Strip horizontal rules (---, ___, ***)
-      .replace(/^[-_*]{3,}$/gm, '')
-      // Replace em-dash with comma+space
-      .replace(/\u2014/g, ', ')
-      // Replace en-dash with hyphen
-      .replace(/\u2013/g, '-')
-      // Strip bullet markers at line start
-      .replace(/^\s*[-•·]\s+/gm, '')
-      // Strip numbering like "1)" or "1." at line start
-      .replace(/^\s*\d+[.)]\s+/gm, '')
-      // Clean double spaces
-      .replace(/ {2,}/g, ' ')
-      // Clean triple+ newlines to double
-      .replace(/\n{3,}/g, '\n\n')
-      // Fix lone quote/punctuation on its own line
-      .replace(/\n\s*(["'\u201C\u201D\u2018\u2019])\s*$/g, '$1')
-      .replace(/^\s*(["'\u201C\u201D\u2018\u2019])\s*\n/g, '$1')
-      // Trim again after all replacements
-      .trim();
-  }
-
   try {
     // Confidence score
     const scoreMatch = rawText.match(/[Ss]kor[:\s]*(\d+)\s*\/\s*10/);
@@ -557,25 +522,7 @@ export function parseResponse(rawText) {
         .filter((l) => l.length > 0);
     }
 
-    // Final cleanup pass: remove any remaining markdown artifacts and fix common AI typos
-    replies = replies.map((r) => {
-      let text = r;
-      // Remove any stray markdown links [text](url)
-      text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
-      // Remove backtick code formatting
-      text = text.replace(/`([^`]+)`/g, '$1');
-      // Fix common AI spacing issues: space before punctuation
-      text = text.replace(/\s+([.,;:!?])/g, '$1');
-      // Fix missing space after punctuation
-      text = text.replace(/([.,;:!?])([^\s])/g, '$1 $2');
-      // Fix double punctuation
-      text = text.replace(/([.,;:!?])\1+/g, '$1');
-      // Ensure no leading/trailing whitespace per line
-      text = text.split('\n').map((l) => l.trim()).join('\n');
-      // Final double-space cleanup
-      text = text.replace(/ {2,}/g, ' ').trim();
-      return text;
-    });
+    replies = replies.map((r) => finalizeReply(r));
 
     result.replies = replies.slice(0, 10);
 
