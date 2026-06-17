@@ -383,7 +383,13 @@ export async function generateReply(tweetText, apiKey, options = {}) {
   const overrides = [];
 
   if (language !== 'auto') {
-    const langMap = { id: 'Bahasa Indonesia', en: 'English', ja: '日本語 (Japanese)' };
+    const langMap = {
+      id: 'Bahasa Indonesia',
+      en: 'English',
+      ja: '日本語 (Japanese)',
+      he: 'עברית (Hebrew/Israel)',
+      hi: 'हिन्दी (Hindi/India)',
+    };
     overrides.push(`Tulis SEMUA reply dalam bahasa: ${langMap[language]}. Apapun bahasa tweet aslinya, output HARUS dalam ${langMap[language]}.`);
   }
 
