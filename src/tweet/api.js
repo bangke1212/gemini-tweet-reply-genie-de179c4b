@@ -215,24 +215,26 @@ PENTING: Setiap opsi HANYA berisi teks reply/komentar saja. JANGAN tulis label s
 
 Jumlah opsi: tulis sesuai yang diminta (default 5). Kalau ada override di [OVERRIDE SETTINGS], ikuti jumlah yang diminta.
 
-Contoh format yang BENAR:
+Contoh format yang BENAR (perhatikan: TIDAK ada label, TIDAK ada markdown, hanya teks murni):
 1. Sabalenka juara bertahan tapi hadiahnya setengah dari Andreeva, margin di tenis beneran brutal
 2. Gap antara ranking 1 dan ranking 200 makin lebar ya
 
 Contoh format yang SALAH:
 1. Opsi 1: Sabalenka juara bertahan...
 2. **Opsi 2:** Gap antara ranking...
+3. - Sabalenka juara bertahan... (ini bullet list, SALAH)
 
 Setiap opsi harus:
 - Maks 280 karakter. Hitung sebelum tulis. Kalau mepet, lebih baik pendek.
 - Tulis natural seperti orang biasa reply di X. Pakai newline kalau ada perpindahan ide.
-- PLAIN TEXT ONLY. Dilarang keras pakai **, *, #, ---, em-dash (\u2014), atau markdown apapun di teks reply.
+- PLAIN TEXT ONLY. Dilarang keras pakai **, *, #, ---, em-dash (\u2014), bullet (-), numbering, atau markdown apapun di teks reply.
 - Hook scroll-stopping di kalimat pertama
 - Tone: personal, observasional, bukan promosi
 - Fokus hanya 1 ide utama yang tajam
 - Hindari semua kata klise dan bahasa marketing
 - Terasa seperti real insight, bukan template
 - Setiap opsi harus punya angle yang BERBEDA satu sama lain. Jangan 5 variasi dari ide yang sama.
+- PASTIKAN tidak ada typo, tidak ada salah eja, tidak ada tanda baca yang salah tempat, tidak ada double space.
 
 Struktur mental (JANGAN tulis label ini di output):
 1. Hook (kontra / surprising)
