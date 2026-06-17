@@ -7,6 +7,8 @@ const LANGUAGES = [
   { value: 'id', label: 'Indonesia' },
   { value: 'en', label: 'English' },
   { value: 'ja', label: '日本語 (Jepang)' },
+  { value: 'he', label: 'עברית (Israel)' },
+  { value: 'hi', label: 'हिन्दी (India)' },
 ]
 
 const THEMES = [
