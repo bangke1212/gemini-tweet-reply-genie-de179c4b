@@ -482,6 +482,41 @@ export function parseResponse(rawText) {
     raw: rawText,
   };
 
+  // Shared cleanup helper used for both extraction paths
+  function cleanReplyText(text) {
+    return text
+      .trim()
+      // Strip outer quotes
+      .replace(/^["'\u201C\u201D\u2018\u2019`]+|["'\u201C\u201D\u2018\u2019`]+$/g, '')
+      // Strip "Opsi X:", "Reply X:", "Option X:" prefix
+      .replace(/^(?:Opsi|Reply|Option)\s*\d+[.:)\-\s]*/gi, '')
+      // Strip bold markdown **text** → text
+      .replace(/\*\*(.+?)\*\*/g, '$1')
+      // Strip italic markdown *text* → text
+      .replace(/(?<!\\)\*(.+?)\*/g, '$1')
+      // Strip heading markers at start of lines
+      .replace(/^#{1,4}\s+/gm, '')
+      // Strip horizontal rules (---, ___, ***)
+      .replace(/^[-_*]{3,}$/gm, '')
+      // Replace em-dash with comma+space
+      .replace(/\u2014/g, ', ')
+      // Replace en-dash with hyphen
+      .replace(/\u2013/g, '-')
+      // Strip bullet markers at line start
+      .replace(/^\s*[-•·]\s+/gm, '')
+      // Strip numbering like "1)" or "1." at line start
+      .replace(/^\s*\d+[.)]\s+/gm, '')
+      // Clean double spaces
+      .replace(/ {2,}/g, ' ')
+      // Clean triple+ newlines to double
+      .replace(/\n{3,}/g, '\n\n')
+      // Fix lone quote/punctuation on its own line
+      .replace(/\n\s*(["'\u201C\u201D\u2018\u2019])\s*$/g, '$1')
+      .replace(/^\s*(["'\u201C\u201D\u2018\u2019])\s*\n/g, '$1')
+      // Trim again after all replacements
+      .trim();
+  }
+
   try {
     // Confidence score
     const scoreMatch = rawText.match(/[Ss]kor[:\s]*(\d+)\s*\/\s*10/);
@@ -507,30 +542,7 @@ export function parseResponse(rawText) {
     );
 
     for (const match of numbered) {
-      const text = match[2]
-        .trim()
-        // Strip quotes
-        .replace(/^["'\u201C\u201D\u2018\u2019`]+|["'\u201C\u201D\u2018\u2019`]+$/g, '')
-        // Strip "Opsi X:" or "Reply X:" prefix
-        .replace(/^(?:Opsi|Reply|Option)\s*\d+[.:)\-\s]*/gi, '')
-        // Strip bold markdown **text** → text
-        .replace(/\*\*(.+?)\*\*/g, '$1')
-        // Strip italic markdown *text* → text
-        .replace(/(?<!\\)\*(.+?)\*/g, '$1')
-        // Strip heading markers at start of lines
-        .replace(/^#{1,4}\s+/gm, '')
-        // Strip horizontal rules (---, ___, ***)
-        .replace(/^[-_*]{3,}$/gm, '')
-        // Replace em-dash with space
-        .replace(/\u2014/g, ', ')
-        // Clean double spaces
-        .replace(/ {2,}/g, ' ')
-        // Clean up leftover blank lines from stripping
-        .replace(/\n{3,}/g, '\n\n')
-        // Fix lone quote/punctuation on its own line
-        .replace(/\n\s*(["'\u201C\u201D\u2018\u2019])\s*$/g, '$1')
-        .replace(/^\s*(["'\u201C\u201D\u2018\u2019])\s*\n/g, '$1')
-        .trim();
+      const text = cleanReplyText(match[2]);
       if (text.length > 0 && text.length < 500) replies.push(text);
     }
 
@@ -538,26 +550,29 @@ export function parseResponse(rawText) {
       const lines = replySection.split(/\n\s*\n/).filter((l) => l.trim().length > 10);
       replies = lines
         .slice(0, 10)
-        .map((l) =>
-          l
-            .trim()
-            .replace(/^\d+[.):\s]+/, '')
-            .replace(/^["'\u201C\u201D`]+|["'\u201C\u201D`]+$/g, '')
-            .replace(/^(?:Opsi|Reply|Option)\s*\d+[.:)\-\s]*/gi, '')
-            .replace(/\*\*(.+?)\*\*/g, '$1')
-            .replace(/(?<!\\)\*(.+?)\*/g, '$1')
-            .replace(/^#{1,4}\s+/gm, '')
-            .replace(/^[-_*]{3,}$/gm, '')
-            .replace(/\u2014/g, ', ')
-            .replace(/ {2,}/g, ' ')
-            .replace(/\n{3,}/g, '\n\n')
-            // Fix lone quote on its own line
-            .replace(/\n\s*(["'\u201C\u201D\u2018\u2019])\s*$/g, '$1')
-            .replace(/^\s*(["'\u201C\u201D\u2018\u2019])\s*\n/g, '$1')
-            .trim()
-        )
+        .map((l) => cleanReplyText(l))
         .filter((l) => l.length > 0);
     }
+
+    // Final cleanup pass: remove any remaining markdown artifacts and fix common AI typos
+    replies = replies.map((r) => {
+      let text = r;
+      // Remove any stray markdown links [text](url)
+      text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+      // Remove backtick code formatting
+      text = text.replace(/`([^`]+)`/g, '$1');
+      // Fix common AI spacing issues: space before punctuation
+      text = text.replace(/\s+([.,;:!?])/g, '$1');
+      // Fix missing space after punctuation
+      text = text.replace(/([.,;:!?])([^\s])/g, '$1 $2');
+      // Fix double punctuation
+      text = text.replace(/([.,;:!?])\1+/g, '$1');
+      // Ensure no leading/trailing whitespace per line
+      text = text.split('\n').map((l) => l.trim()).join('\n');
+      // Final double-space cleanup
+      text = text.replace(/ {2,}/g, ' ').trim();
+      return text;
+    });
 
     result.replies = replies.slice(0, 10);
 
@@ -571,7 +586,7 @@ export function parseResponse(rawText) {
       // Capture all techniques mentioned
       const techMatches = [...recoText.matchAll(/(Social Proof|Curiosity Gap|Authority)/gi)];
       if (techMatches.length > 0) {
-        result.recommendation.technique = techMatches.map(m => m[1]).join(' + ');
+        result.recommendation.technique = techMatches.map((m) => m[1]).join(' + ');
       }
 
       result.recommendation.reason = recoText
