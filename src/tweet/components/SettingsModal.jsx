@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import styles from './SettingsModal.module.css'
+import { PROVIDERS } from '../api'
 
 const LANGUAGES = [
   { value: 'auto', label: 'Auto (Detect)' },
@@ -16,6 +17,7 @@ const THEMES = [
 
 export default function SettingsModal({ isOpen, onClose, onSave, currentSettings }) {
   const [apiKey, setApiKey] = useState('')
+  const [provider, setProvider] = useState('agnes')
   const [language, setLanguage] = useState('auto')
   const [temperature, setTemperature] = useState(0.7)
   const [replyCount, setReplyCount] = useState(5)
@@ -25,6 +27,7 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
 
   useEffect(() => {
     if (isOpen) {
+      setProvider(currentSettings.provider || 'agnes')
       setApiKey(currentSettings.apiKey || '')
       setLanguage(currentSettings.language || 'auto')
       setTemperature(currentSettings.temperature ?? 0.7)
@@ -56,6 +59,7 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
 
   function handleSave() {
     onSave({
+      provider,
       apiKey: apiKey.trim(),
       language,
       temperature,
@@ -75,6 +79,8 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
 
   if (!isOpen) return null
 
+  const providerCfg = PROVIDERS[provider] || PROVIDERS.agnes
+
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -90,12 +96,33 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
 
         {/* API Key */}
         <div className={styles.section}>
-          <label className={styles.label}>API Key</label>
+          <label className={styles.label}>Provider AI</label>
+          <div className={styles.themeGrid} style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))' }}>
+            {Object.entries(PROVIDERS).map(([key, p]) => (
+              <button
+                key={key}
+                type="button"
+                className={`${styles.themeCard} ${provider === key ? styles.themeActive : ''}`}
+                onClick={() => {
+                  setProvider(key)
+                  setApiKey(currentSettings.apiKeys?.[key] || '')
+                }}
+              >
+                <span className={styles.themeLabel}>{p.label}</span>
+                <span className={styles.themeDesc}>{p.model}</span>
+              </button>
+            ))}
+          </div>
+          <p className={styles.hint}>Pilih penyedia AI yang ingin dipakai</p>
+        </div>
+
+        <div className={styles.section}>
+          <label className={styles.label}>API Key ({providerCfg.label})</label>
           <div className={styles.inputWrap}>
             <input
               type="password"
               className={styles.input}
-              placeholder="sk-..."
+              placeholder={provider === 'gemini' ? 'AIza...' : 'sk-...'}
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSave()}
@@ -113,17 +140,16 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
             </button>
           </div>
           <p className={styles.desc}>
-            API key disimpan secara lokal di browser kamu dan tidak dikirim ke server manapun.
+            API key disimpan lokal di browser, terpisah per provider, dan tidak dikirim ke server manapun.
           </p>
 
           <div className={styles.howTo}>
             <div className={styles.howToTitle}>Cara mendapatkan API Key</div>
             <ol className={styles.steps}>
-              <li>Buka <a href="https://platform.agnes-ai.com/settings/apiKeys" target="_blank" rel="noopener noreferrer" className={styles.link}>platform.agnes-ai.com/settings/apiKeys</a></li>
-              <li>Daftar atau login ke akun Agnes AI</li>
-              <li>Buka menu <strong>API Keys</strong></li>
-              <li>Klik <strong>Create New Key</strong>, copy key-nya</li>
-              <li>Paste key di atas, lalu klik Save (model: <strong>agnes-2.0-flash</strong>)</li>
+              <li>Buka <a href={providerCfg.keyUrl} target="_blank" rel="noopener noreferrer" className={styles.link}>{providerCfg.keyUrl.replace(/^https?:\/\//, '')}</a></li>
+              <li>Login atau daftar ke akun {providerCfg.label}</li>
+              <li>Buat API Key baru, lalu copy</li>
+              <li>Paste key di atas, lalu klik Save (model: <strong>{providerCfg.model}</strong>)</li>
             </ol>
           </div>
         </div>
