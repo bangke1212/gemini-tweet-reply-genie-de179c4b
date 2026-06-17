@@ -420,6 +420,9 @@ export async function generateReply(tweetText, apiKey, options = {}) {
     overrides.push(THEME_OVERRIDES[theme]);
   }
 
+  // Mandatory proofreading reminder
+  overrides.push('VERIFIKASI AKHIR: Sebelum output reply, baca ulang setiap opsi dan pastikan: (1) tidak ada typo/salah eja, (2) tidak ada tanda baca yang salah, (3) tidak ada double space, (4) tidak ada markdown/formatting, (5) kalimat logis dan koheren. Kalau ada yang salah, perbaiki DULU sebelum output.');
+
   if (overrides.length > 0) {
     userMessage += '\n\n---\n[OVERRIDE SETTINGS]\n' + overrides.join('\n');
   }
