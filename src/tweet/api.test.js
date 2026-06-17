@@ -98,8 +98,10 @@ describe('finalizeReply', () => {
     expect(finalizeReply('done.Next step')).toBe('done. Next step');
   });
 
-  it('preserves ellipsis "..." and "?!" combos', () => {
-    expect(finalizeReply('wait...really?!')).toBe('wait...really?!');
+  it('preserves ellipsis "..." and "?!" combos (adds inter-sentence space)', () => {
+    // "..." stays intact; sentence boundary gets a space inserted.
+    expect(finalizeReply('wait...really?!')).toBe('wait... really?!');
+    expect(finalizeReply('wow?! amazing')).toBe('wow?! amazing');
   });
 
   it('collapses repeated commas/colons but not periods/exclaims', () => {
