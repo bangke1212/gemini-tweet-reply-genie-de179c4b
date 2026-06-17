@@ -423,6 +423,11 @@ export async function generateReply(tweetText, apiKey, options = {}) {
   // Mandatory proofreading reminder
   overrides.push('VERIFIKASI AKHIR: Sebelum output reply, baca ulang setiap opsi dan pastikan: (1) tidak ada typo/salah eja, (2) tidak ada tanda baca yang salah, (3) tidak ada double space, (4) tidak ada markdown/formatting, (5) kalimat logis dan koheren. Kalau ada yang salah, perbaiki DULU sebelum output.');
 
+  // Hard length + emoji constraint (per user request)
+  overrides.push('PANJANG WAJIB: Setiap opsi reply HARUS tepat 50 kata (toleransi 48-52 kata). Hitung kata sebelum output. Kalau kurang, tambah substansi. Kalau lebih, potong. Jangan padding dengan kata kosong; semua kata harus berkontribusi ke ide utama.');
+  overrides.push('EMOJI WAJIB: Setiap opsi reply HARUS mengandung minimal 1 emoji yang relevan dengan konteks (maksimal 3). Emoji ditempatkan natural di tengah atau akhir kalimat, bukan dipaksakan. Hindari emoji generik (\u{1F44D}\u{1F525}) kalau ada yang lebih spesifik dengan topik.');
+  overrides.push('CATATAN: Aturan 50 kata + emoji wajib ini OVERRIDE batas 280 karakter dan aturan "emoji minimal" di tone guideline manapun (termasuk tema Cerdas/Tajam). Tetap patuhi aturan presisi bahasa dan larangan markdown.');
+
   if (overrides.length > 0) {
     userMessage += '\n\n---\n[OVERRIDE SETTINGS]\n' + overrides.join('\n');
   }
