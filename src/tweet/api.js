@@ -5,6 +5,21 @@ PRINSIP UTAMA: Setiap reply harus terasa ditulis manusia yang punya perspektif, 
 
 ---
 
+[PRESISI KALIMAT - WAJIB & ABSOLUT]
+- Setiap reply harus 100% bebas typo, salah eja, dan kesalahan tata bahasa. Tidak ada toleransi sedikitpun.
+- Kalimat harus logis, padu, dan koheren dari awal sampai akhir. Tidak boleh ada kontradiksi internal.
+- Pilih kata yang paling tepat konteksnya. Jangan pakai sinonim asal-asalan.
+- Struktur kalimat harus gramatikal benar: subjek, predikat, objek, keterangan diletakkan sesuai aturan bahasa target.
+- Hindari pengulangan kata atau frasa dalam satu reply kecuali untuk efek retorika yang disengaja.
+- Pastikan referensi pronomina (dia, itu, mereka) jelas tidak ambigu.
+- Gunakan tanda baca secara presisi: koma untuk jeda, titik untuk akhir pernyataan, tanda tanya untuk pertanyaan. Tidak boleh salah tempat.
+- Hindari pleonasme (penulisan berlebihan/mubazir) seperti "kembali lagi", "masih tetap", "naik meningkat".
+- Verifikasi ejaan nama proper (orang, brand, produk, tempat). Kalau tidak yakin, gunakan deskripsi umum atau singkatan yang aman.
+- Akhiran dan imbuhan harus tepat. Contoh Indonesia: "memperbaiki" bukan "memperbaiki", "mengubah" bukan "mengubah".
+- Sebelum output final, lakukan mental proofreading: baca setiap reply sekali lagi dan tanyakan "Apakah ada typo? Apakah ada kata yang salah eja? Apakah kalimat ini terdengar aneh?"
+
+---
+
 [KUALITAS BAHASA - WAJIB]
 - DILARANG ada typo, salah ketik, atau salah eja dalam SEMUA reply. Periksa ulang setiap kata sebelum output.
 - Ejaan harus 100% benar sesuai standar bahasa yang dipakai (KBBI untuk Indonesia, standard English untuk English, 正しい日本語 untuk Jepang, עברית תקנית untuk Ibrani/Israel, मानक हिन्दी untuk Hindi/India).
@@ -18,12 +33,13 @@ PRINSIP UTAMA: Setiap reply harus terasa ditulis manusia yang punya perspektif, 
 
 [NATURAL & ORGANIC - WAJIB]
 - Reply harus terdengar seperti manusia asli yang lagi scroll X dan spontan komen, bukan AI yang nyusun kalimat.
-- DILARANG pakai pembuka template AI: "Wah", "Menarik sekali", "Sebagai seseorang yang...", "It's worth noting", "Indeed", "Certainly".
+- DILARANG pakai pembuka template AI: "Wah", "Menarik sekali", "Sebagai seseorang yang...", "It's worth noting", "Indeed", "Certainly", "Furthermore", "In conclusion".
 - DILARANG kalimat yang terlalu rapi/sempurna struktur SPOK-nya. Manusia sering pakai fragmen, elipsis, atau kalimat yang mulai di tengah pikiran.
 - Pakai diksi sehari-hari yang sesuai komunitas bahasa target, bukan terjemahan kaku.
 - Sisipkan satu detail kecil yang terasa personal (pengalaman, observasi, reaksi spontan) supaya tidak terdengar generik.
 - Variasi panjang antar opsi: jangan semua opsi panjangnya mirip. Campur pendek dan medium.
 - Test mental: kalau reply ini di-paste ke X tanpa konteks, apakah orang akan mengira ini ditulis bot? Kalau iya, tulis ulang.
+- Hindari pengulangan pola pembuka yang sama di tiap opsi. Tiap opsi harus punya "suara" dan cara mulai yang berbeda.
 
 ---
 
@@ -52,6 +68,7 @@ Hindari buzzwords kosong: synergy, seamless, empowering. Sebut fiturnya langsung
 - Tidak ada opening @mention.
 - Maksimal 280 karakter per reply. Hitung karakter sebelum finalize. Kalau lebih dari 280, potong atau tulis ulang.
 - TEKS REPLY harus plain text murni. DILARANG pakai **, *, #, ##, ###, ---, ___, atau formatting markdown apapun di dalam teks reply. (Catatan: heading ### di output format untuk struktur jawaban boleh, yang dilarang adalah markdown di dalam teks reply itu sendiri.)
+- DILARANG pakai bullet list, numbering, atau simbol struktural di dalam teks reply.
 - Tulis seperti orang biasa nge-reply di X. Pakai newline kalau ada perpindahan ide atau kontras, tapi kalau reply pendek dan satu ide, cukup 1 baris saja.
 
 ### Ritme per Audiens
@@ -198,24 +215,26 @@ PENTING: Setiap opsi HANYA berisi teks reply/komentar saja. JANGAN tulis label s
 
 Jumlah opsi: tulis sesuai yang diminta (default 5). Kalau ada override di [OVERRIDE SETTINGS], ikuti jumlah yang diminta.
 
-Contoh format yang BENAR:
+Contoh format yang BENAR (perhatikan: TIDAK ada label, TIDAK ada markdown, hanya teks murni):
 1. Sabalenka juara bertahan tapi hadiahnya setengah dari Andreeva, margin di tenis beneran brutal
 2. Gap antara ranking 1 dan ranking 200 makin lebar ya
 
 Contoh format yang SALAH:
 1. Opsi 1: Sabalenka juara bertahan...
 2. **Opsi 2:** Gap antara ranking...
+3. - Sabalenka juara bertahan... (ini bullet list, SALAH)
 
 Setiap opsi harus:
 - Maks 280 karakter. Hitung sebelum tulis. Kalau mepet, lebih baik pendek.
 - Tulis natural seperti orang biasa reply di X. Pakai newline kalau ada perpindahan ide.
-- PLAIN TEXT ONLY. Dilarang keras pakai **, *, #, ---, em-dash (\u2014), atau markdown apapun di teks reply.
+- PLAIN TEXT ONLY. Dilarang keras pakai **, *, #, ---, em-dash (\u2014), bullet (-), numbering, atau markdown apapun di teks reply.
 - Hook scroll-stopping di kalimat pertama
 - Tone: personal, observasional, bukan promosi
 - Fokus hanya 1 ide utama yang tajam
 - Hindari semua kata klise dan bahasa marketing
 - Terasa seperti real insight, bukan template
 - Setiap opsi harus punya angle yang BERBEDA satu sama lain. Jangan 5 variasi dari ide yang sama.
+- PASTIKAN tidak ada typo, tidak ada salah eja, tidak ada tanda baca yang salah tempat, tidak ada double space.
 
 Struktur mental (JANGAN tulis label ini di output):
 1. Hook (kontra / surprising)
@@ -401,6 +420,9 @@ export async function generateReply(tweetText, apiKey, options = {}) {
     overrides.push(THEME_OVERRIDES[theme]);
   }
 
+  // Mandatory proofreading reminder
+  overrides.push('VERIFIKASI AKHIR: Sebelum output reply, baca ulang setiap opsi dan pastikan: (1) tidak ada typo/salah eja, (2) tidak ada tanda baca yang salah, (3) tidak ada double space, (4) tidak ada markdown/formatting, (5) kalimat logis dan koheren. Kalau ada yang salah, perbaiki DULU sebelum output.');
+
   if (overrides.length > 0) {
     userMessage += '\n\n---\n[OVERRIDE SETTINGS]\n' + overrides.join('\n');
   }
@@ -463,6 +485,41 @@ export function parseResponse(rawText) {
     raw: rawText,
   };
 
+  // Shared cleanup helper used for both extraction paths
+  function cleanReplyText(text) {
+    return text
+      .trim()
+      // Strip outer quotes
+      .replace(/^["'\u201C\u201D\u2018\u2019`]+|["'\u201C\u201D\u2018\u2019`]+$/g, '')
+      // Strip "Opsi X:", "Reply X:", "Option X:" prefix
+      .replace(/^(?:Opsi|Reply|Option)\s*\d+[.:)\-\s]*/gi, '')
+      // Strip bold markdown **text** → text
+      .replace(/\*\*(.+?)\*\*/g, '$1')
+      // Strip italic markdown *text* → text
+      .replace(/(?<!\\)\*(.+?)\*/g, '$1')
+      // Strip heading markers at start of lines
+      .replace(/^#{1,4}\s+/gm, '')
+      // Strip horizontal rules (---, ___, ***)
+      .replace(/^[-_*]{3,}$/gm, '')
+      // Replace em-dash with comma+space
+      .replace(/\u2014/g, ', ')
+      // Replace en-dash with hyphen
+      .replace(/\u2013/g, '-')
+      // Strip bullet markers at line start
+      .replace(/^\s*[-•·]\s+/gm, '')
+      // Strip numbering like "1)" or "1." at line start
+      .replace(/^\s*\d+[.)]\s+/gm, '')
+      // Clean double spaces
+      .replace(/ {2,}/g, ' ')
+      // Clean triple+ newlines to double
+      .replace(/\n{3,}/g, '\n\n')
+      // Fix lone quote/punctuation on its own line
+      .replace(/\n\s*(["'\u201C\u201D\u2018\u2019])\s*$/g, '$1')
+      .replace(/^\s*(["'\u201C\u201D\u2018\u2019])\s*\n/g, '$1')
+      // Trim again after all replacements
+      .trim();
+  }
+
   try {
     // Confidence score
     const scoreMatch = rawText.match(/[Ss]kor[:\s]*(\d+)\s*\/\s*10/);
@@ -488,30 +545,7 @@ export function parseResponse(rawText) {
     );
 
     for (const match of numbered) {
-      const text = match[2]
-        .trim()
-        // Strip quotes
-        .replace(/^["'\u201C\u201D\u2018\u2019`]+|["'\u201C\u201D\u2018\u2019`]+$/g, '')
-        // Strip "Opsi X:" or "Reply X:" prefix
-        .replace(/^(?:Opsi|Reply|Option)\s*\d+[.:)\-\s]*/gi, '')
-        // Strip bold markdown **text** → text
-        .replace(/\*\*(.+?)\*\*/g, '$1')
-        // Strip italic markdown *text* → text
-        .replace(/(?<!\\)\*(.+?)\*/g, '$1')
-        // Strip heading markers at start of lines
-        .replace(/^#{1,4}\s+/gm, '')
-        // Strip horizontal rules (---, ___, ***)
-        .replace(/^[-_*]{3,}$/gm, '')
-        // Replace em-dash with space
-        .replace(/\u2014/g, ', ')
-        // Clean double spaces
-        .replace(/ {2,}/g, ' ')
-        // Clean up leftover blank lines from stripping
-        .replace(/\n{3,}/g, '\n\n')
-        // Fix lone quote/punctuation on its own line
-        .replace(/\n\s*(["'\u201C\u201D\u2018\u2019])\s*$/g, '$1')
-        .replace(/^\s*(["'\u201C\u201D\u2018\u2019])\s*\n/g, '$1')
-        .trim();
+      const text = cleanReplyText(match[2]);
       if (text.length > 0 && text.length < 500) replies.push(text);
     }
 
@@ -519,26 +553,29 @@ export function parseResponse(rawText) {
       const lines = replySection.split(/\n\s*\n/).filter((l) => l.trim().length > 10);
       replies = lines
         .slice(0, 10)
-        .map((l) =>
-          l
-            .trim()
-            .replace(/^\d+[.):\s]+/, '')
-            .replace(/^["'\u201C\u201D`]+|["'\u201C\u201D`]+$/g, '')
-            .replace(/^(?:Opsi|Reply|Option)\s*\d+[.:)\-\s]*/gi, '')
-            .replace(/\*\*(.+?)\*\*/g, '$1')
-            .replace(/(?<!\\)\*(.+?)\*/g, '$1')
-            .replace(/^#{1,4}\s+/gm, '')
-            .replace(/^[-_*]{3,}$/gm, '')
-            .replace(/\u2014/g, ', ')
-            .replace(/ {2,}/g, ' ')
-            .replace(/\n{3,}/g, '\n\n')
-            // Fix lone quote on its own line
-            .replace(/\n\s*(["'\u201C\u201D\u2018\u2019])\s*$/g, '$1')
-            .replace(/^\s*(["'\u201C\u201D\u2018\u2019])\s*\n/g, '$1')
-            .trim()
-        )
+        .map((l) => cleanReplyText(l))
         .filter((l) => l.length > 0);
     }
+
+    // Final cleanup pass: remove any remaining markdown artifacts and fix common AI typos
+    replies = replies.map((r) => {
+      let text = r;
+      // Remove any stray markdown links [text](url)
+      text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+      // Remove backtick code formatting
+      text = text.replace(/`([^`]+)`/g, '$1');
+      // Fix common AI spacing issues: space before punctuation
+      text = text.replace(/\s+([.,;:!?])/g, '$1');
+      // Fix missing space after punctuation
+      text = text.replace(/([.,;:!?])([^\s])/g, '$1 $2');
+      // Fix double punctuation
+      text = text.replace(/([.,;:!?])\1+/g, '$1');
+      // Ensure no leading/trailing whitespace per line
+      text = text.split('\n').map((l) => l.trim()).join('\n');
+      // Final double-space cleanup
+      text = text.replace(/ {2,}/g, ' ').trim();
+      return text;
+    });
 
     result.replies = replies.slice(0, 10);
 
@@ -552,7 +589,7 @@ export function parseResponse(rawText) {
       // Capture all techniques mentioned
       const techMatches = [...recoText.matchAll(/(Social Proof|Curiosity Gap|Authority)/gi)];
       if (techMatches.length > 0) {
-        result.recommendation.technique = techMatches.map(m => m[1]).join(' + ');
+        result.recommendation.technique = techMatches.map((m) => m[1]).join(' + ');
       }
 
       result.recommendation.reason = recoText
