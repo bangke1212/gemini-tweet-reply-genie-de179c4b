@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import styles from './App.module.css';
-import { getApiKey, saveApiKey, getLanguage, saveLanguage, getTemperature, saveTemperature, getReplyCount, saveReplyCount, getTheme, saveTheme, generateReply, parseResponse } from './api';
+import { getApiKey, saveApiKey, getLanguage, saveLanguage, getTemperature, saveTemperature, getReplyCount, saveReplyCount, getTheme, saveTheme, getProvider, saveProvider, PROVIDERS, generateReply, parseResponse } from './api';
 import ReplyCard from './components/ReplyCard';
 import MetaBar from './components/MetaBar';
 import SettingsModal from './components/SettingsModal';
@@ -78,6 +78,7 @@ export default function App() {
         temperature: getTemperature(),
         replyCount: getReplyCount(),
         theme: getTheme(),
+        provider: getProvider(),
       });
       const parsed = parseResponse(raw);
       setResults(parsed);
@@ -100,7 +101,8 @@ export default function App() {
 
   const handleSaveSettings = useCallback(
     (settings) => {
-      saveApiKey(settings.apiKey);
+      saveProvider(settings.provider);
+      saveApiKey(settings.apiKey, settings.provider);
       saveLanguage(settings.language);
       saveTemperature(settings.temperature);
       saveReplyCount(settings.replyCount);
@@ -276,7 +278,9 @@ export default function App() {
         onClose={() => setShowSettings(false)}
         onSave={handleSaveSettings}
         currentSettings={{
+          provider: getProvider(),
           apiKey: getApiKey(),
+          apiKeys: Object.keys(PROVIDERS).reduce((acc, k) => { acc[k] = getApiKey(k); return acc; }, {}),
           language: getLanguage(),
           temperature: getTemperature(),
           replyCount: getReplyCount(),

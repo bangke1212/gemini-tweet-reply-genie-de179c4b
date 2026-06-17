@@ -5,6 +5,17 @@ PRINSIP UTAMA: Setiap reply harus terasa ditulis manusia yang punya perspektif, 
 
 ---
 
+[KUALITAS BAHASA - WAJIB]
+- DILARANG ada typo, salah ketik, atau salah eja dalam SEMUA reply. Periksa ulang setiap kata sebelum output.
+- Ejaan harus 100% benar sesuai standar bahasa yang dipakai (KBBI untuk Indonesia, standard English untuk English, 正しい日本語 untuk Jepang).
+- Tanda baca harus tepat: titik, koma, tanda tanya, tanda seru dipakai sesuai aturan.
+- Spasi rapi: tidak ada double space, tidak ada spasi sebelum tanda baca.
+- Kapitalisasi konsisten. Nama orang, brand, dan tempat ditulis dengan ejaan resminya.
+- Kalau ragu ejaan suatu kata, GANTI dengan kata lain yang kamu yakin benar. Jangan tebak.
+- Sebelum finalize tiap opsi reply, baca ulang sekali untuk pastikan tidak ada typo.
+
+---
+
 [EXECUTION PROTOCOL]
 Sebelum menulis reply apapun, jalankan urutan ini secara berurutan:
 
@@ -197,21 +208,75 @@ Struktur mental (JANGAN tulis label ini di output):
 - Pilih 1 opsi terbaik + alasan singkat.
 - Sebutkan teknik yang dipakai: Social Proof, Curiosity Gap, atau Authority.`;
 
+export const PROVIDERS = {
+  agnes: {
+    label: 'Agnes AI',
+    url: 'https://apihub.agnes-ai.com/v1/chat/completions',
+    model: 'agnes-2.0-flash',
+    keyHint: 'Dapatkan di platform.agnes-ai.com/settings/apiKeys',
+    keyUrl: 'https://platform.agnes-ai.com/settings/apiKeys',
+  },
+  gemini: {
+    label: 'Google Gemini',
+    url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
+    model: 'gemini-2.5-flash',
+    keyHint: 'Dapatkan di aistudio.google.com/apikey',
+    keyUrl: 'https://aistudio.google.com/apikey',
+  },
+  deepseek: {
+    label: 'DeepSeek',
+    url: 'https://api.deepseek.com/v1/chat/completions',
+    model: 'deepseek-chat',
+    keyHint: 'Dapatkan di platform.deepseek.com/api_keys',
+    keyUrl: 'https://platform.deepseek.com/api_keys',
+  },
+  openai: {
+    label: 'OpenAI',
+    url: 'https://api.openai.com/v1/chat/completions',
+    model: 'gpt-4o-mini',
+    keyHint: 'Dapatkan di platform.openai.com/api-keys',
+    keyUrl: 'https://platform.openai.com/api-keys',
+  },
+  groq: {
+    label: 'Groq',
+    url: 'https://api.groq.com/openai/v1/chat/completions',
+    model: 'llama-3.3-70b-versatile',
+    keyHint: 'Dapatkan di console.groq.com/keys',
+    keyUrl: 'https://console.groq.com/keys',
+  },
+};
+
 export const CONFIG = {
-  API_URL: 'https://apihub.agnes-ai.com/v1/chat/completions',
-  MODEL: 'agnes-2.0-flash',
   TEMPERATURE: 0.7,
   MAX_TOKENS: 2048,
 };
 
-export function getApiKey() {
-  if (typeof window === 'undefined') return '';
-  return localStorage.getItem('agnes_api_key') || localStorage.getItem('gemini_api_key') || '';
+export function getProvider() {
+  if (typeof window === 'undefined') return 'agnes';
+  const p = localStorage.getItem('reply_provider');
+  return p && PROVIDERS[p] ? p : 'agnes';
 }
 
-export function saveApiKey(key) {
+export function saveProvider(provider) {
   if (typeof window === 'undefined') return;
-  localStorage.setItem('agnes_api_key', key.trim());
+  if (PROVIDERS[provider]) localStorage.setItem('reply_provider', provider);
+}
+
+export function getApiKey(provider) {
+  if (typeof window === 'undefined') return '';
+  const p = provider || getProvider();
+  const key = localStorage.getItem(`apikey_${p}`);
+  if (key) return key;
+  // legacy fallbacks
+  if (p === 'agnes') return localStorage.getItem('agnes_api_key') || '';
+  if (p === 'gemini') return localStorage.getItem('gemini_api_key') || '';
+  return '';
+}
+
+export function saveApiKey(key, provider) {
+  if (typeof window === 'undefined') return;
+  const p = provider || getProvider();
+  localStorage.setItem(`apikey_${p}`, (key || '').trim());
 }
 
 export function getLanguage() {
@@ -286,7 +351,14 @@ Gunakan tone berbobot yang menambah perspektif baru.
 };
 
 export async function generateReply(tweetText, apiKey, options = {}) {
-  const { language = 'auto', temperature = 0.7, replyCount = 5, theme = 'santai' } = options;
+  const {
+    language = 'auto',
+    temperature = 0.7,
+    replyCount = 5,
+    theme = 'santai',
+    provider = getProvider(),
+  } = options;
+  const cfg = PROVIDERS[provider] || PROVIDERS.agnes;
 
   let userMessage = tweetText;
   const overrides = [];
@@ -308,25 +380,22 @@ export async function generateReply(tweetText, apiKey, options = {}) {
     userMessage += '\n\n---\n[OVERRIDE SETTINGS]\n' + overrides.join('\n');
   }
 
-  const response = await fetch(
-  CONFIG.API_URL,
-  {
+  const response = await fetch(cfg.url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
+      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: CONFIG.MODEL,
+      model: cfg.model,
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: userMessage },
       ],
       temperature,
       max_tokens: CONFIG.MAX_TOKENS,
-    })
-  }
-);
+    }),
+  });
 
   if (!response.ok) {
     let msg = '';
