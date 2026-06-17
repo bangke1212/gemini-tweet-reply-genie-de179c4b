@@ -39,7 +39,7 @@ PRINSIP UTAMA: Setiap reply harus terasa ditulis manusia yang punya perspektif, 
 - Sisipkan satu detail kecil yang terasa personal (pengalaman, observasi, reaksi spontan) supaya tidak terdengar generik.
 - Variasi panjang antar opsi: jangan semua opsi panjangnya mirip. Campur pendek dan medium.
 - Test mental: kalau reply ini di-paste ke X tanpa konteks, apakah orang akan mengira ini ditulis bot? Kalau iya, tulis ulang.
-- Hindari pengulangan pola pembuka yang sama di tiap opsi. Tiap opsi harus punya "suara" dan cara mulai yang berbeda.`
+- Hindari pengulangan pola pembuka yang sama di tiap opsi. Tiap opsi harus punya "suara" dan cara mulai yang berbeda.
 
 ---
 
