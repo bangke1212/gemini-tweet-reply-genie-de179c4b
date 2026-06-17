@@ -476,6 +476,72 @@ export async function generateReply(tweetText, apiKey, options = {}) {
   return rawContent;
 }
 
+// ============================================================
+// Reply text sanitizers (exported for testability)
+// ============================================================
+
+// Locale-aware punctuation: include CJK full-width punctuation, Hebrew/Arabic
+// punctuation, and Devanagari danda so we don't false-trigger spacing fixes.
+const PUNCT_AFTER_NO_SPACE = /([.,;:!?])([^\s.,;:!?)\]\}'"\u201D\u2019\u3001\u3002\uFF0C\uFF0E])/g;
+const PUNCT_BEFORE_SPACE = /[\u0020\t]+([.,;:!?])/g;
+
+export function cleanReplyText(text) {
+  if (typeof text !== 'string') return '';
+  return text
+    .trim()
+    // Strip outer quotes
+    .replace(/^["'\u201C\u201D\u2018\u2019`]+|["'\u201C\u201D\u2018\u2019`]+$/g, '')
+    // Strip "Opsi X:", "Reply X:", "Option X:" prefix
+    .replace(/^(?:Opsi|Reply|Option)\s*\d+[.:)\-\s]*/gi, '')
+    // Strip bold markdown **text** -> text
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    // Strip italic markdown *text* -> text
+    .replace(/(?<!\\)\*(.+?)\*/g, '$1')
+    // Strip heading markers at start of lines
+    .replace(/^#{1,4}\s+/gm, '')
+    // Strip horizontal rules (---, ___, ***)
+    .replace(/^[-_*]{3,}$/gm, '')
+    // Replace em-dash with comma+space
+    .replace(/\u2014/g, ', ')
+    // Replace en-dash with hyphen
+    .replace(/\u2013/g, '-')
+    // Strip bullet markers at line start
+    .replace(/^\s*[-\u2022\u00B7]\s+/gm, '')
+    // Strip numbering like "1)" or "1." at line start
+    .replace(/^\s*\d+[.)]\s+/gm, '')
+    // Clean double spaces
+    .replace(/ {2,}/g, ' ')
+    // Clean triple+ newlines to double
+    .replace(/\n{3,}/g, '\n\n')
+    // Fix lone quote/punctuation on its own line
+    .replace(/\n\s*(["'\u201C\u201D\u2018\u2019])\s*$/g, '$1')
+    .replace(/^\s*(["'\u201C\u201D\u2018\u2019])\s*\n/g, '$1')
+    .trim();
+}
+
+export function finalizeReply(text) {
+  if (typeof text !== 'string') return '';
+  let out = text;
+  // Remove stray markdown links [text](url)
+  out = out.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+  // Remove backtick code formatting
+  out = out.replace(/`([^`]+)`/g, '$1');
+  // Space before punctuation (ASCII only — do not touch CJK/Hebrew/Hindi punctuation)
+  out = out.replace(PUNCT_BEFORE_SPACE, '$1');
+  // Missing space after punctuation
+  out = out.replace(PUNCT_AFTER_NO_SPACE, '$1 $2');
+  // Collapse repeated punctuation (preserve "..." and "?!" intentional combos)
+  out = out.replace(/([,;:])\1+/g, '$1');
+  // Trim per line and collapse spaces
+  out = out.split('\n').map((l) => l.trim()).join('\n');
+  out = out.replace(/ {2,}/g, ' ').trim();
+  return out;
+}
+
+export function sanitizeReply(text) {
+  return finalizeReply(cleanReplyText(text));
+}
+
 export function parseResponse(rawText) {
   const result = {
     confidence: { score: null, reason: '' },
@@ -484,41 +550,6 @@ export function parseResponse(rawText) {
     recommendation: { pick: null, reason: '', technique: '' },
     raw: rawText,
   };
-
-  // Shared cleanup helper used for both extraction paths
-  function cleanReplyText(text) {
-    return text
-      .trim()
-      // Strip outer quotes
-      .replace(/^["'\u201C\u201D\u2018\u2019`]+|["'\u201C\u201D\u2018\u2019`]+$/g, '')
-      // Strip "Opsi X:", "Reply X:", "Option X:" prefix
-      .replace(/^(?:Opsi|Reply|Option)\s*\d+[.:)\-\s]*/gi, '')
-      // Strip bold markdown **text** → text
-      .replace(/\*\*(.+?)\*\*/g, '$1')
-      // Strip italic markdown *text* → text
-      .replace(/(?<!\\)\*(.+?)\*/g, '$1')
-      // Strip heading markers at start of lines
-      .replace(/^#{1,4}\s+/gm, '')
-      // Strip horizontal rules (---, ___, ***)
-      .replace(/^[-_*]{3,}$/gm, '')
-      // Replace em-dash with comma+space
-      .replace(/\u2014/g, ', ')
-      // Replace en-dash with hyphen
-      .replace(/\u2013/g, '-')
-      // Strip bullet markers at line start
-      .replace(/^\s*[-•·]\s+/gm, '')
-      // Strip numbering like "1)" or "1." at line start
-      .replace(/^\s*\d+[.)]\s+/gm, '')
-      // Clean double spaces
-      .replace(/ {2,}/g, ' ')
-      // Clean triple+ newlines to double
-      .replace(/\n{3,}/g, '\n\n')
-      // Fix lone quote/punctuation on its own line
-      .replace(/\n\s*(["'\u201C\u201D\u2018\u2019])\s*$/g, '$1')
-      .replace(/^\s*(["'\u201C\u201D\u2018\u2019])\s*\n/g, '$1')
-      // Trim again after all replacements
-      .trim();
-  }
 
   try {
     // Confidence score
@@ -557,25 +588,7 @@ export function parseResponse(rawText) {
         .filter((l) => l.length > 0);
     }
 
-    // Final cleanup pass: remove any remaining markdown artifacts and fix common AI typos
-    replies = replies.map((r) => {
-      let text = r;
-      // Remove any stray markdown links [text](url)
-      text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
-      // Remove backtick code formatting
-      text = text.replace(/`([^`]+)`/g, '$1');
-      // Fix common AI spacing issues: space before punctuation
-      text = text.replace(/\s+([.,;:!?])/g, '$1');
-      // Fix missing space after punctuation
-      text = text.replace(/([.,;:!?])([^\s])/g, '$1 $2');
-      // Fix double punctuation
-      text = text.replace(/([.,;:!?])\1+/g, '$1');
-      // Ensure no leading/trailing whitespace per line
-      text = text.split('\n').map((l) => l.trim()).join('\n');
-      // Final double-space cleanup
-      text = text.replace(/ {2,}/g, ' ').trim();
-      return text;
-    });
+    replies = replies.map((r) => finalizeReply(r));
 
     result.replies = replies.slice(0, 10);
 
