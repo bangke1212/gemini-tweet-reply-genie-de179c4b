@@ -282,6 +282,13 @@ export const PROVIDERS = {
     keyHint: 'Dapatkan di console.groq.com/keys',
     keyUrl: 'https://console.groq.com/keys',
   },
+  qwen: {
+    label: 'Qwen (OpenRouter)',
+    url: 'https://openrouter.ai/api/v1/chat/completions',
+    model: 'qwen/qwen-2.5-72b-instruct',
+    keyHint: 'Dapatkan di openrouter.ai/workspaces/default/keys',
+    keyUrl: 'https://openrouter.ai/workspaces/default/keys',
+  },
 };
 
 export const CONFIG = {
