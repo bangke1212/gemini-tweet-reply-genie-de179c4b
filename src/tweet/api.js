@@ -285,7 +285,7 @@ export const PROVIDERS = {
   qwen: {
     label: 'Kimi K2.6 (OpenRouter)',
     url: 'https://openrouter.ai/api/v1/chat/completions',
-    model: 'moonshotai/kimi-k2.6:free',
+    model: 'google/gemma-4-31b:free',
     keyHint: 'Dapatkan di openrouter.ai/workspaces/default/keys',
     keyUrl: 'https://openrouter.ai/workspaces/default/keys',
   },
