@@ -283,9 +283,9 @@ export const PROVIDERS = {
     keyUrl: 'https://console.groq.com/keys',
   },
   qwen: {
-    label: 'Qwen (OpenRouter)',
+    label: 'Kimi K2.6 (OpenRouter)',
     url: 'https://openrouter.ai/api/v1/chat/completions',
-    model: 'moonshotai/kimi-k2.6:free ',
+    model: 'moonshotai/kimi-k2.6:free',
     keyHint: 'Dapatkan di openrouter.ai/workspaces/default/keys',
     keyUrl: 'https://openrouter.ai/workspaces/default/keys',
   },
