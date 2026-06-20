@@ -285,7 +285,7 @@ export const PROVIDERS = {
   qwen: {
     label: 'Qwen (OpenRouter)',
     url: 'https://openrouter.ai/api/v1/chat/completions',
-    model: 'google/gemma-4-31b:free',
+    model: 'Qwen3.7-max',
     keyHint: 'Dapatkan di openrouter.ai/workspaces/default/keys',
     keyUrl: 'https://openrouter.ai/workspaces/default/keys',
   },
