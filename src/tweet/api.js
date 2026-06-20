@@ -285,7 +285,7 @@ export const PROVIDERS = {
   qwen: {
     label: 'Qwen (OpenRouter)',
     url: 'https://openrouter.ai/api/v1/chat/completions',
-    model: 'deepseek/deepseek-v4-flash:free',
+    model: 'moonshotai/kimi-k2.6:free ',
     keyHint: 'Dapatkan di openrouter.ai/workspaces/default/keys',
     keyUrl: 'https://openrouter.ai/workspaces/default/keys',
   },
