@@ -250,7 +250,7 @@ export const PROVIDERS = {
   agnes: {
     label: 'Agnes AI',
     url: 'https://apihub.agnes-ai.com/v1/chat/completions',
-    model: 'agnes-1.5-pro',
+    model: 'agnes-1.5-flash',
     keyHint: 'Dapatkan di platform.agnes-ai.com/settings/apiKeys',
     keyUrl: 'https://platform.agnes-ai.com/settings/apiKeys',
   },
