@@ -262,11 +262,11 @@ export const PROVIDERS = {
     keyUrl: 'https://aistudio.google.com/apikey',
   },
   deepseek: {
-    label: 'DeepSeek',
-    url: 'https://api.deepseek.com/v1/chat/completions',
-    model: 'deepseek-chat',
+    label: 'Vikey',
+    url: 'https://api.vikey.ai/v1/chat/completions',
+    model: 'vikey/vclaw',
     keyHint: 'Dapatkan di platform.deepseek.com/api_keys',
-    keyUrl: 'https://platform.deepseek.com/api_keys',
+    keyUrl: 'hhttps://api.vikey.ai/api_keys',
   },
   openai: {
     label: 'OpenAI',
