@@ -285,7 +285,7 @@ export const PROVIDERS = {
   qwen: {
     label: 'Qwen (OpenRouter)',
     url: 'https://openrouter.ai/api/v1/chat/completions',
-    model: 'nvidia/nemotron-3-ultra-550b-a55b:free',
+    model: 'google/gemma-4-31b-it:free',
     keyHint: 'Dapatkan di openrouter.ai/workspaces/default/keys',
     keyUrl: 'https://openrouter.ai/workspaces/default/keys',
   },
