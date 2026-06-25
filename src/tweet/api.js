@@ -430,6 +430,87 @@ Gunakan tone berbobot yang menambah perspektif baru.
 - Contoh vibe: "Yang menarik bukan fiturnya, tapi 70% user mereka dari tier 2-3. Distribusi ngalahin produk dan itu revolusi diam-diam 💡"`,
 };
 
+// ============================================================
+// SMART AUTO-DETECT LANGUAGE — deteksi bahasa tweet input
+// ============================================================
+
+/**
+ * Deteksi bahasa dari teks tweet secara heuristic.
+ * Support: Indonesia, English, Jepang, Ibrani, Hindi + fallback
+ * Prioritas: deteksi spesifik karakter script > keyword > common words
+ */
+export function detectLanguage(text) {
+  if (typeof text !== 'string' || !text.trim()) return 'en';
+
+  const t = text.trim();
+  const len = t.length;
+
+  // ── Script-based detection (paling akurat) ──
+
+  // Hebrew: karakter 0x0590–0x05FF
+  const hebrewChars = (t.match(/[֐-׿]/g) || []).length;
+  if (hebrewChars > 2 && hebrewChars / len > 0.08) return 'he';
+
+  // Hindi/Devanagari: karakter 0x0900–0x097F
+  const hindiChars = (t.match(/[ऀ-ॿ]/g) || []).length;
+  if (hindiChars > 2 && hindiChars / len > 0.08) return 'hi';
+
+  // Jepang: Hiragana (0x3040–0x309F), Katakana (0x30A0–0x30FF), Kanji (0x4E00–0x9FFF)
+  const jpChars = (t.match(/[぀-ゟ゠-ヿ一-鿿]/g) || []).length;
+  if (jpChars > 2 && jpChars / len > 0.08) return 'ja';
+
+  // ── Keyword-based detection ──
+
+  // Indonesia: kata-kata khas Indo
+  const indoWords = /(gue|gua|lo|lu|gak|nggak|ga|enggak|banget|bgt|sih|dong|deh|nih|tuh|ya|yah|kok|loh|lho|kan|dong|dong|anjir|anjay|njir|wkwk|wkwkwk|buset|bage|njay|brengsek|goblok|tolol|bacot|capek|deh|sama|aja|doang|dong|kalo|udah|abis|gitu|kayak|bang|bro|cu|bgst|ngapain|kenapa|gw|gk|pdhl|dgn|dll|dkk|sblm|ssdh|tdk|blm|sm|jg|tp|krn|jd|bkn|drpd|emang|emng|ntar|ntr|pake|pke|tau|tw|cuma|cuman)/gi;
+  const indoMatch = (t.match(indoWords) || []).length;
+  if (indoMatch >= 2) return 'id';
+
+  // Inggris: kata-kata umum English (deteksi dari dominasi latin + common words)
+  const engWords = /(the|and|for|that|this|with|you|are|not|but|have|from|they|will|just|what|when|can|all|your|been|there|their|about|would|which|some|like|more|than|its|time|only|also|into|other|then|them|these|over|back|after|first|well|even|because)/gi;
+  const engMatch = (t.match(engWords) || []).length;
+
+  // Cek apakah ada banyak karakter latin + dominasi English
+  const latinChars = (t.match(/[a-zA-Z]/g) || []).length;
+  if (latinChars / len > 0.5 && engMatch >= 1 && indoMatch < 2) return 'en';
+
+  // ── Fallback: Indonesia (paling umum untuk user Indo) ──
+  if (latinChars / len > 0.5 && indoMatch >= 1) return 'id';
+
+  // Default: English
+  return 'en';
+}
+
+/**
+ * Mapping kode bahasa ke nama + aturan typo pasif
+ */
+const LANGUAGE_RULES = {
+  id: {
+    name: 'Bahasa Indonesia',
+    typoReminder: 'WAJIB CEK EYD/typo Indonesia: pastikan "memperbaiki" bukan "memperbaiki", "mengubah" bukan "mengubah", imbuhan tepat (me-, ber-, di-, ter-, pe-, ke-an, per-an), tidak ada kata baku yang salah eja. Gunakan KBBI sebagai acuan. Bahasa gaul boleh (gue, lo, gak, bgt) tapi typo struktural tetap DILARANG.',
+  },
+  en: {
+    name: 'English',
+    typoReminder: 'CHECK spelling: common mistakes like "recieve"→"receive", "seperate"→"separate", "definately"→"definitely", "occured"→"occurred", "accomodate"→"accommodate", "their/there/they're", "your/you're", "its/it's". Use contractions naturally but spell them correctly.',
+  },
+  ja: {
+    name: '日本語 (Japanese)',
+    typoReminder: '日本語の表記チェック: 漢字の誤変換、送り仮名の間違い、長音記号の抜け（コンピュータ→コンピューター）、カタカナの小文字化ミスに注意。自然な日本語の語順と助詞（は、が、を、に、で）を確認。',
+  },
+  he: {
+    name: 'עברית (Hebrew/Israel)',
+    typoReminder: 'בדיקת איות עברית: וודא ניקוד נכון, כתיב מלא vs חסר, מילים נפוצות שגויות (כמו "בגלל" לא "בגלל"), שימוש נכון ב-ה' הידיעה, ו' החיבור. הימנע מעברית מקראית/ספרותית — השתמש בעברית מדוברת טבעית.',
+  },
+  hi: {
+    name: 'हिन्दी (Hindi/India)',
+    typoReminder: 'हिन्दी वर्तनी जाँच: मात्राओं की शुद्धता (छोटी इ/बड़ी ई, छोटी उ/बड़ी ऊ), हलंत का सही प्रयोग, अनुस्वार/अनुनासिक, संयुक्ताक्षर। प्राकृतिक हिन्दी या हिंग्लिश का प्रयोग करें — संस्कृतनिष्ठ भाषा से बचें।',
+  },
+  auto: {
+    name: 'Auto-detect',
+    typoReminder: '',
+  },
+};
+
 export async function generateReply(tweetText, apiKey, options = {}) {
   const {
     language = 'auto',
@@ -443,15 +524,23 @@ export async function generateReply(tweetText, apiKey, options = {}) {
   let userMessage = tweetText;
   const overrides = [];
 
+  // ── AUTO-DETECT + LANGUAGE ENFORCEMENT ──
+  // Deteksi bahasa dari tweet input
+  const detectedLang = detectLanguage(tweetText);
+  const effectiveLang = language === 'auto' ? detectedLang : language;
+  const langInfo = LANGUAGE_RULES[effectiveLang] || LANGUAGE_RULES.en;
+
   if (language !== 'auto') {
-    const langMap = {
-      id: 'Bahasa Indonesia',
-      en: 'English',
-      ja: '日本語 (Japanese)',
-      he: 'עברית (Hebrew/Israel)',
-      hi: 'हिन्दी (Hindi/India)',
-    };
-    overrides.push(`Tulis SEMUA reply dalam bahasa: ${langMap[language]}. Apapun bahasa tweet aslinya, output HARUS dalam ${langMap[language]}.`);
+    // User manually selected language
+    overrides.push(`[LANGUAGE OVERRIDE] Tulis SEMUA reply dalam bahasa: ${langInfo.name}. Abaikan bahasa tweet aslinya. Output HARUS dalam ${langInfo.name}.`);
+  } else {
+    // Auto-detect — beri tahu model bahasa yang terdeteksi
+    overrides.push(`[LANGUAGE AUTO-DETECT] Tweet terdeteksi dalam bahasa: ${langInfo.name}. Tulis SEMUA reply dalam bahasa yang SAMA persis dengan bahasa tweet asli. Jangan campur bahasa lain.`);
+  }
+
+  // Tambah typo reminder sesuai bahasa
+  if (langInfo.typoReminder) {
+    overrides.push(`[TYPO CHECK - ${langInfo.name.toUpperCase()}] ${langInfo.typoReminder}`);
   }
 
   if (replyCount !== 5) {
