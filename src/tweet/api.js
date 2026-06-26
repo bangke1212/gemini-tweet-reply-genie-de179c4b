@@ -317,7 +317,7 @@ export const PROVIDERS = {
   },
   Nvidia: {
     label: 'NVIDIA Model',
-    url: 'https://integrate.api.nvidia.com/v1',
+    url: 'https://integrate.api.nvidia.com/v1/chat/completions',
     model: 'meta/llama-3.3-70b-instruct',
     keyHint: 'Dapatkan API Key di NVIDIA Build',
     keyUrl: 'https://build.nvidia.com/',
@@ -352,7 +352,7 @@ export const PROVIDERS = {
   },
   nvidia_free: {
     label: 'NVIDIA Free ✨',
-    url: 'https://integrate.api.nvidia.com/v1',
+    url: 'https://integrate.api.nvidia.com/v1/chat/completions',
     model: 'nvidia/llama-3.3-nemotron-super-49b-v1.5',
     models: [
       { id: 'nvidia/llama-3.3-nemotron-super-49b-v1.5', name: 'Nemotron Super 49B ⭐ (Recommended)' },
