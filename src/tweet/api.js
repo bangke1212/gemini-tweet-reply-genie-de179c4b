@@ -316,8 +316,8 @@ export const PROVIDERS = {
     keyUrl: 'https://platform.agnes-ai.com/settings/apiKeys',
   },
   gemini: {
-    label: 'Google Gemini',
-    url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
+    label: 'gemini-3-5-flash',
+    url: 'https://integrate.api.nvidia.com/v1s',
     model: 'gemini-2.5-flash',
     keyHint: 'Dapatkan di aistudio.google.com/apikey',
     keyUrl: 'https://aistudio.google.com/apikey',
