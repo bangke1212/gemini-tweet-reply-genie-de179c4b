@@ -352,7 +352,7 @@ export const PROVIDERS = {
   },
   nvidia_free: {
     label: 'NVIDIA Free ✨',
-    url: 'https://integrate.api.nvidia.com/v1/chat/completions',
+    url: '/api/nvidia-proxy',
     model: 'meta/llama-3.1-70b-instruct',
     models: [
       { id: 'meta/llama-3.1-70b-instruct', name: 'Llama 3.1 70B ⭐ (Recommended)' },
