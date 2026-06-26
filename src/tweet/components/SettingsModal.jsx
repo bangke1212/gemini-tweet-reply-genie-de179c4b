@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import styles from './SettingsModal.module.css'
-import { PROVIDERS } from '../api'
+import { PROVIDERS, getNvidiaModel, saveNvidiaModel } from '../api'
 
 const LANGUAGES = [
   { value: 'auto', label: 'Auto (Detect)' },
@@ -25,7 +25,10 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
   const [replyCount, setReplyCount] = useState(5)
   const [theme, setTheme] = useState('santai')
   const [langOpen, setLangOpen] = useState(false)
+  const [nvidiaModel, setNvidiaModel] = useState('')
+  const [nvModelOpen, setNvModelOpen] = useState(false)
   const dropdownRef = useRef(null)
+  const nvDropdownRef = useRef(null)
 
   useEffect(() => {
     if (isOpen) {
@@ -36,6 +39,8 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
       setReplyCount(currentSettings.replyCount ?? 5)
       setTheme(currentSettings.theme || 'santai')
       setLangOpen(false)
+      setNvidiaModel(getNvidiaModel() || (PROVIDERS.nvidia_free?.models?.[0]?.id || ''))
+      setNvModelOpen(false)
     }
   }, [isOpen, currentSettings])
 
@@ -49,17 +54,23 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
   }, [isOpen, onClose])
 
   useEffect(() => {
-    if (!langOpen) return
+    if (!langOpen && !nvModelOpen) return
     function handleClickOutside(e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setLangOpen(false)
       }
+      if (nvDropdownRef.current && !nvDropdownRef.current.contains(e.target)) {
+        setNvModelOpen(false)
+      }
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [langOpen])
+  }, [langOpen, nvModelOpen])
 
   function handleSave() {
+    if (provider === 'nvidia_free' && nvidiaModel) {
+      saveNvidiaModel(nvidiaModel)
+    }
     onSave({
       provider,
       apiKey: apiKey.trim(),
@@ -142,7 +153,7 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
             </button>
           </div>
           <p className={styles.desc}>
-            API key disimpan lokal di browser, terpisah per provider, dan tidak dikirim ke server manapun.
+            API key disimpan lokal di browser, terpisah per provider, dan tidak dikirim ke server manapun.{provider === 'nvidia_free' ? ' NVIDIA Free pakai API key yang sama dengan NVIDIA Model — gratis, tanpa credit card!' : ''}
           </p>
 
           <div className={styles.howTo}>
@@ -151,12 +162,51 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
               <li>Buka <a href={providerCfg.keyUrl} target="_blank" rel="noopener noreferrer" className={styles.link}>{providerCfg.keyUrl.replace(/^https?:\/\//, '')}</a></li>
               <li>Login atau daftar ke akun {providerCfg.label}</li>
               <li>Buat API Key baru, lalu copy</li>
-              <li>Paste key di atas, lalu klik Save (model: <strong>{providerCfg.model}</strong>)</li>
+              <li>Paste key di atas, lalu klik Save{provider === 'nvidia_free' && nvidiaModel ? (<> (model: <strong>{PROVIDERS.nvidia_free.models.find(m => m.id === nvidiaModel)?.name || nvidiaModel}</strong>)</>) : (<> (model: <strong>{providerCfg.model}</strong>)</>)}</li>
             </ol>
           </div>
         </div>
 
-        {/* Language */}
+        
+        {/* NVIDIA Free Model Selector */}
+        {provider === 'nvidia_free' && PROVIDERS.nvidia_free?.models && (
+          <div className={styles.section}>
+            <label className={styles.label}>Model NVIDIA Free</label>
+            <div className={styles.customSelect} ref={nvDropdownRef}>
+              <button
+                type="button"
+                className={`${styles.selectTrigger} ${nvModelOpen ? styles.selectOpen : ''}`}
+                onClick={() => setNvModelOpen(!nvModelOpen)}
+              >
+                <span>{PROVIDERS.nvidia_free.models.find((m) => m.id === nvidiaModel)?.name || PROVIDERS.nvidia_free.models[0].name}</span>
+                <svg className={styles.selectChevron} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+              {nvModelOpen && (
+                <div className={styles.selectDropdown}>
+                  {PROVIDERS.nvidia_free.models.map((m) => (
+                    <button
+                      key={m.id}
+                      type="button"
+                      className={`${styles.selectOption} ${nvidiaModel === m.id ? styles.optionSelected : ''}`}
+                      onClick={() => { setNvidiaModel(m.id); setNvModelOpen(false) }}
+                    >
+                      <span>{m.name}</span>
+                      {nvidiaModel === m.id && (
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <p className={styles.hint}>Pilih model gratis dari NVIDIA NIM — semua gratis, tanpa batas token harian</p>
+          </div>
+        )}
+{/* Language */}
         <div className={styles.section}>
           <label className={styles.label}>Bahasa Output</label>
           <div className={styles.customSelect} ref={dropdownRef}>
