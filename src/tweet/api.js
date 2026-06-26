@@ -315,10 +315,10 @@ export const PROVIDERS = {
     keyHint: 'Dapatkan di platform.agnes-ai.com/settings/apiKeys',
     keyUrl: 'https://platform.agnes-ai.com/settings/apiKeys',
   },
-  gemini: {
+  Nvidia: {
     label: 'NVIDIA Model',
     url: 'https://integrate.api.nvidia.com/v1',
-    model: 'minimaxai/minimax-m3',
+    model: 'meta/llama-3.3-70b-instruct',
     keyHint: 'Dapatkan API Key di NVIDIA Build',
     keyUrl: 'https://build.nvidia.com/',
   },
