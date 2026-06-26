@@ -203,7 +203,7 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
                 </div>
               )}
             </div>
-            <p className={styles.hint}>Pilih model gratis dari NVIDIA NIM — semua gratis, tanpa batas token harian</p>
+            <p className={styles.hint}>Pilih model gratis dari NVIDIA NIM. Model bertanda 🧠 cocok untuk reasoning. Model bertanda * perlu register di halaman modelnya (klik \"Try API\")</p>
           </div>
         )}
 {/* Language */}
