@@ -317,9 +317,9 @@ export const PROVIDERS = {
   },
   gemini: {
     label: 'NVIDIA Model',
-    url: 'https://integrate.api.nvidia.com/v1s',
+    url: 'https://integrate.api.nvidia.com/v1',
     model: 'minimaxai/minimax-m3',
-    keyHint: 'Dapatkan di aistudio.google.com/apikey',
+    keyHint: 'Dapatkan API Key di NVIDIA Build',
     keyUrl: 'https://build.nvidia.com/',
   },
   deepseek: {
