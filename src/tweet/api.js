@@ -513,23 +513,23 @@ export function detectLanguage(text) {
 const LANGUAGE_RULES = {
   id: {
     name: 'Bahasa Indonesia',
-    typoReminder: 'WAJIB CEK EYD/typo Indonesia: pastikan "memperbaiki" bukan "memperbaiki", "mengubah" bukan "mengubah", imbuhan tepat (me-, ber-, di-, ter-, pe-, ke-an, per-an), tidak ada kata baku yang salah eja. Gunakan KBBI sebagai acuan. Bahasa gaul boleh (gue, lo, gak, bgt) tapi typo struktural tetap DILARANG.',
+    typoReminder: `WAJIB CEK EYD/typo Indonesia: pastikan "memperbaiki" bukan "memperbaiki", "mengubah" bukan "mengubah", imbuhan tepat (me-, ber-, di-, ter-, pe-, ke-an, per-an), tidak ada kata baku yang salah eja. Gunakan KBBI sebagai acuan. Bahasa gaul boleh (gue, lo, gak, bgt) tapi typo struktural tetap DILARANG.`,
   },
   en: {
     name: 'English',
-    typoReminder: 'CHECK spelling: common mistakes like "recieve"→"receive", "seperate"→"separate", "definately"→"definitely", "occured"→"occurred", "accomodate"→"accommodate", "their/there/they're", "your/you're", "its/it's". Use contractions naturally but spell them correctly.',
+    typoReminder: `CHECK spelling: common mistakes like "recieve"→"receive", "seperate"→"separate", "definately"→"definitely", "occured"→"occurred", "accomodate"→"accommodate", "their/there/they're", "your/you're", "its/it's". Use contractions naturally but spell them correctly.`,
   },
   ja: {
     name: '日本語 (Japanese)',
-    typoReminder: '日本語の表記チェック: 漢字の誤変換、送り仮名の間違い、長音記号の抜け（コンピュータ→コンピューター）、カタカナの小文字化ミスに注意。自然な日本語の語順と助詞（は、が、を、に、で）を確認。',
+    typoReminder: `日本語の表記チェック: 漢字の誤変換、送り仮名の間違い、長音記号の抜け（コンピュータ→コンピューター）、カタカナの小文字化ミスに注意。自然な日本語の語順と助詞（は、が、を、に、で）を確認。`,
   },
   he: {
     name: 'עברית (Hebrew/Israel)',
-    typoReminder: 'בדיקת איות עברית: וודא ניקוד נכון, כתיב מלא vs חסר, מילים נפוצות שגויות (כמו "בגלל" לא "בגלל"), שימוש נכון ב-ה' הידיעה, ו' החיבור. הימנע מעברית מקראית/ספרותית — השתמש בעברית מדוברת טבעית.',
+    typoReminder: `בדיקת איות עברית: וודא ניקוד נכון, כתיב מלא vs חסר, מילים נפוצות שגויות (כמו "בגלל" לא "בגלל"), שימוש נכון ב-ה' הידיעה, ו' החיבור. הימנע מעברית מקראית/ספרותית — השתמש בעברית מדוברת טבעית.`,
   },
   hi: {
     name: 'हिन्दी (Hindi/India)',
-    typoReminder: 'हिन्दी वर्तनी जाँच: मात्राओं की शुद्धता (छोटी इ/बड़ी ई, छोटी उ/बड़ी ऊ), हलंत का सही प्रयोग, अनुस्वार/अनुनासिक, संयुक्ताक्षर। प्राकृतिक हिन्दी या हिंग्लिश का प्रयोग करें — संस्कृतनिष्ठ भाषा से बचें।',
+    typoReminder: `हिन्दी वर्तनी जाँच: मात्राओं की शुद्धता (छोटी इ/बड़ी ई, छोटी उ/बड़ी ऊ), हलंत का सही प्रयोग, अनुस्वार/अनुनासिक, संयुक्ताक्षर। प्राकृतिक हिन्दी या हिंग्लिश का प्रयोग करें — संस्कृतनिष्ठ भाषा से बचें।`,
   },
   auto: {
     name: 'Auto-detect',
