@@ -316,11 +316,11 @@ export const PROVIDERS = {
     keyUrl: 'https://platform.agnes-ai.com/settings/apiKeys',
   },
   gemini: {
-    label: 'gemini-3-5-flash',
+    label: 'NVIDIA Model',
     url: 'https://integrate.api.nvidia.com/v1s',
-    model: 'gemini-2.5-flash',
+    model: 'minimaxai/minimax-m3',
     keyHint: 'Dapatkan di aistudio.google.com/apikey',
-    keyUrl: 'https://aistudio.google.com/apikey',
+    keyUrl: 'https://build.nvidia.com/',
   },
   deepseek: {
     label: 'Vikey',
