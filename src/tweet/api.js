@@ -353,12 +353,12 @@ export const PROVIDERS = {
   nvidia_free: {
     label: 'NVIDIA Free ✨',
     url: 'https://integrate.api.nvidia.com/v1/chat/completions',
-    model: 'nvidia/llama-3.3-nemotron-super-49b-v1.5',
+    model: 'meta/llama-3.1-70b-instruct',
     models: [
-      { id: 'nvidia/llama-3.3-nemotron-super-49b-v1.5', name: 'Nemotron Super 49B ⭐ (131K ctx)' },
-      { id: 'meta/llama-3.1-70b-instruct', name: 'Llama 3.1 70B (131K ctx)' },
-      { id: 'meta/llama-3.2-3b-instruct', name: 'Llama 3.2 3B — Fast (131K ctx)' },
-      { id: 'meta/llama-3.2-1b-instruct', name: 'Llama 3.2 1B — Ultra Fast (131K ctx)' },
+      { id: 'meta/llama-3.1-70b-instruct', name: 'Llama 3.1 70B ⭐ (Recommended)' },
+      { id: 'nvidia/llama-3.3-nemotron-super-49b-v1.5', name: '🧠 Nemotron Super 49B (Reasoning)' },
+      { id: 'meta/llama-3.2-3b-instruct', name: 'Llama 3.2 3B — Fast' },
+      { id: 'meta/llama-3.2-1b-instruct', name: 'Llama 3.2 1B — Ultra Fast' },
       { id: 'deepseek-ai/deepseek-v4-pro', name: '🧠 DeepSeek V4 Pro (1M ctx) *' },
       { id: 'deepseek-ai/deepseek-v4-flash', name: '🧠 DeepSeek V4 Flash (1M ctx) *' },
       { id: 'z-ai/glm-5.1', name: '🧠 GLM 5.1 (203K ctx) *' },
@@ -665,8 +665,11 @@ export async function generateReply(tweetText, apiKey, options = {}) {
   }
 
   const data = await response.json();
+  const choice = data.choices?.[0]?.message;
   const rawContent =
-    data.choices?.[0]?.message?.content ||
+    choice?.content ||
+    choice?.reasoning_content ||
+    choice?.reasoning ||
     data.choices?.[0]?.text ||
     '';
 
