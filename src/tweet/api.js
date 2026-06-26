@@ -350,6 +350,23 @@ export const PROVIDERS = {
     keyHint: 'Dapatkan di openrouter.ai/workspaces/default/keys',
     keyUrl: 'https://openrouter.ai/workspaces/default/keys',
   },
+  nvidia_free: {
+    label: 'NVIDIA Free ✨',
+    url: 'https://integrate.api.nvidia.com/v1',
+    model: 'nvidia/llama-3.3-nemotron-super-49b-v1.5',
+    models: [
+      { id: 'nvidia/llama-3.3-nemotron-super-49b-v1.5', name: 'Nemotron Super 49B ⭐ (Recommended)' },
+      { id: 'meta/llama-3.1-70b-instruct', name: 'Llama 3.1 70B' },
+      { id: 'meta/llama-3.2-3b-instruct', name: 'Llama 3.2 3B (Fast)' },
+      { id: 'meta/llama-3.2-11b-vision-instruct', name: 'Llama 3.2 11B Vision' },
+      { id: 'qwen/qwen3.5-397b-a17b', name: 'Qwen 3.5 397B' },
+      { id: 'deepseek-ai/deepseek-v4-flash', name: 'DeepSeek V4 Flash' },
+      { id: 'deepseek-ai/deepseek-v4-pro', name: 'DeepSeek V4 Pro' },
+      { id: 'minimaxai/minimax-m3', name: 'MiniMax M3 (1M ctx)' },
+    ],
+    keyHint: 'Gratis! Dapatkan di build.nvidia.com/settings/api-keys',
+    keyUrl: 'https://build.nvidia.com/settings/api-keys',
+  },
 };
 
 export const CONFIG = {
@@ -425,6 +442,16 @@ export function getTheme() {
 export function saveTheme(theme) {
   if (typeof window === 'undefined') return;
   localStorage.setItem('reply_theme', theme);
+}
+
+export function getNvidiaModel() {
+  if (typeof window === 'undefined') return '';
+  return localStorage.getItem('nvidia_model') || '';
+}
+
+export function saveNvidiaModel(model) {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem('nvidia_model', model);
 }
 
 const THEME_OVERRIDES = {
@@ -546,6 +573,13 @@ export async function generateReply(tweetText, apiKey, options = {}) {
     provider = getProvider(),
   } = options;
   const cfg = PROVIDERS[provider] || PROVIDERS.agnes;
+  
+  // NVIDIA Free: support custom model selection
+  let model = cfg.model;
+  if (provider === 'nvidia_free') {
+    const nvModel = getNvidiaModel();
+    if (nvModel) model = nvModel;
+  }
 
   let userMessage = tweetText;
   const overrides = [];
@@ -602,7 +636,7 @@ export async function generateReply(tweetText, apiKey, options = {}) {
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: cfg.model,
+      model: model,
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: userMessage },
