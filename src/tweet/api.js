@@ -628,56 +628,63 @@ export async function generateReply(tweetText, apiKey, options = {}) {
     userMessage += '\n\n---\n[OVERRIDE SETTINGS]\n' + overrides.join('\n');
   }
 
-  const response = await fetch(cfg.url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: model,
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: userMessage },
-      ],
-      temperature,
-      max_tokens: CONFIG.MAX_TOKENS,
-    }),
-  });
+  try {
+    const response = await fetch(cfg.url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: model,
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: userMessage },
+        ],
+        temperature,
+        max_tokens: CONFIG.MAX_TOKENS,
+      }),
+    });
 
-  if (!response.ok) {
-    let msg = '';
-    try {
-      const errData = await response.json();
-      msg = errData?.error?.message || '';
-    } catch {
-      msg = await response.text().catch(() => '');
+    if (!response.ok) {
+      let msg = '';
+      try {
+        const errData = await response.json();
+        msg = errData?.error?.message || '';
+      } catch {
+        msg = await response.text().catch(() => '');
+      }
+      if (response.status === 401) {
+        throw new Error('Invalid API key. Check your key in settings.');
+      } else if (response.status === 429) {
+        throw new Error('Rate limited. Please wait a moment and try again.');
+      } else if (response.status === 400) {
+        throw new Error(`Bad request: ${msg}`);
+      } else {
+        throw new Error(`API Error (${response.status}): ${msg}`);
+      }
     }
-    if (response.status === 401) {
-      throw new Error('Invalid API key. Check your key in settings.');
-    } else if (response.status === 429) {
-      throw new Error('Rate limited. Please wait a moment and try again.');
-    } else if (response.status === 400) {
-      throw new Error(`Bad request: ${msg}`);
-    } else {
-      throw new Error(`API Error (${response.status}): ${msg}`);
+
+    const data = await response.json();
+    const choice = data.choices?.[0]?.message;
+    const rawContent =
+      choice?.content ||
+      choice?.reasoning_content ||
+      choice?.reasoning ||
+      data.choices?.[0]?.text ||
+      '';
+
+    if (!rawContent) {
+      throw new Error('The API returned an empty response. Try a different tweet.');
     }
+
+    return rawContent;
+  } catch (err) {
+    if (err instanceof TypeError && err.message === 'Failed to fetch') {
+      throw new Error('Network error — check your internet connection or the API may be unreachable.');
+    }
+    throw err;
   }
-
-  const data = await response.json();
-  const choice = data.choices?.[0]?.message;
-  const rawContent =
-    choice?.content ||
-    choice?.reasoning_content ||
-    choice?.reasoning ||
-    data.choices?.[0]?.text ||
-    '';
-
-  if (!rawContent) {
-    throw new Error('The API returned an empty response. Try a different tweet.');
-  }
-
-  return rawContent;
 }
 
 // ============================================================
