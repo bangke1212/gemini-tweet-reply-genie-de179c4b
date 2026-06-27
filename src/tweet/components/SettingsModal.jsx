@@ -135,7 +135,7 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
                 }}
               >
                 <span className={styles.themeLabel}>{p.label}</span>
-                <span className={styles.themeDesc}>{p.models ? (selectedModel[key] ? p.models.find(m => m.id === selectedModel[key])?.name : p.models[0].name) : p.model}</span>
+                <span className={styles.themeDesc}>{p.models ? (selectedModel[key] ? (p.models.find(m => m.id === selectedModel[key])?.name || p.models[0]?.name || p.model) : (p.models[0]?.name || p.model)) : p.model}</span>
               </button>
             ))}
           </div>
