@@ -398,24 +398,12 @@ export async function generateReply(tweetText, apiKey, options = {}) {
     overrides.push(THEME_OVERRIDES[theme]);
   }
 
-  // ── ANTI-BOT PRESISI CHECKLIST ── (dieksekusi model SEBELUM output)
-  overrides.push('[ANTI-BOT CHECKLIST - WAJIB SEBELUM OUTPUT]: (1) Scan setiap reply untuk BOT PATTERNS: kalimat simetris, konjungsi textbook, poin berturutan strukturnya mirip, noun phrase panjang tanpa jeda, pengulangan kata 3x+. (2) Jika ditemukan SATU pattern bot → TULIS ULANG reply itu dari awal. (3) Pastikan ada HUMAN PATTERNS: campuran panjang, fragmen, self-correction, filler words, emotional interjection, singkatan gak konsisten, akhiran gantung. (4) Setiap reply harus lolos mental proofreading: dibaca keras-keras natural, gak ada kata yang terlalu baku/formal, lebih mirip temen ngomong daripada chatbot.');
-overrides.push('STRUKTUR PARAGRAF & EYD: (1) WAJIB 2-3 paragraf dipisahkan 1 baris kosong. (2) Setiap kalimat berita diakhiri titik. (3) Koma untuk memisahkan anak kalimat dan sebelum kata hubung (tetapi, sedangkan, padahal). (4) Tanda tanya untuk kalimat tanya. (5) Huruf kapital di awal kalimat. (6) Bahasa gaul tetap boleh — EYD berlaku untuk tanda baca dan struktur, bukan pilihan kata. JANGAN output reply tanpa koma dan titik sama sekali. JANGAN output reply 1 paragraf doang.');
-
-  // Mandatory proofreading reminder
-  overrides.push('VERIFIKASI AKHIR: Sebelum output reply, baca ulang setiap opsi dan pastikan: (1) tidak ada typo/salah eja, (2) tidak ada tanda baca yang salah, (3) tidak ada double space, (4) tidak ada markdown/formatting, (5) kalimat logis dan koheren. Kalau ada yang salah, perbaiki DULU sebelum output.');
-
-  // WAJIB EMOJI - semua model, semua bahasa, semua tone (per user request)
-  overrides.push('WAJIB EMOJI - SEMUA MODEL & SEMUA BAHASA: Setiap opsi reply HARUS pakai 3-5 emoji yang mengekspresikan EMOSI asli terhadap tweet, tersebar natural di dalam paragraf. Emoji bukan tempelan di akhir doang, tapi bagian natural dari ekspresi kalimat di setiap paragraf. Gunakan emoji dari spektrum emosi yang luas: marah 😤😡🤬, kagum 🤯👏🔥🙌, sedih 😢💔😞, seneng 😂🤣✨🎉💯, bingung 🤔😅🙃, sarkas 😏💀🤕🙄, cinta ❤️💪🫶. Gabungkan 2-3 emoji berbeda untuk ekspresi yang lebih kaya dan manusiawi. Sebarkan emoji di tiap paragraf, jangan numpuk di satu tempat.');
-  overrides.push('TONE SANTAI TAJAM CERDAS: Setiap reply harus punya keseimbangan tiga tone: santai (bahasa gaul sehari-hari), tajam (observasi yang menusuk dan gak klise), dan cerdas (insight yang bikin orang mikir "wah iya juga ya"). Jangan cuma satu tone doang.');
-  overrides.push('GAYA BAHASA INDO NATURAL: Tulis seperti orang Indonesia asli yang lagi ngobrol di X — pakai kata-kata gaul sehari-hari (gue, lo, gak, bgt, sih, dong, anjir, njir, wkwk, wkwkwk, woi, coy, bro, bang, cuy), singkatan natural (yg, dgn, tp, krn, jd, bkn, drpd, dkk), dan struktur kalimat yang gak kaku. Kadang pakai bahasa Inggris campur (engglish/Indoglish) kalau natural di konteksnya. Jangan pakai bahasa formal atau baku.');
-  overrides.push('FORMAT BERPARAGRAF WAJIB: Setiap opsi reply HARUS terdiri dari minimal 2-3 paragraf pendek yang dipisahkan dengan 1 baris kosong. JANGAN PERNAH output reply 1 paragraf doang. Paragraf 1 = hook/reaksi awal, Paragraf 2 = insight/penjelasan, Paragraf 3 (opsional) = penutup/refleksi. Maksimal 150 kata per reply (lebih longgar karena berparagraf). Maksimal 600 karakter. Setiap paragraf 1-3 kalimat aja, jangan terlalu panjang.');
-  overrides.push('CATATAN: Aturan emoji wajib + tone santai-tajam-cerdas ini OVERRIDE SEMUA aturan sebelumnya yang membatasi emoji. Semua model (Agnes, Gemini, OpenAI, Groq, Qwen, Vikey) WAJIB mengikuti aturan ini tanpa kecuali. JANGAN PERNAH output reply tanpa emoji.');
-  overrides.push('REASONING NATURAL & GAK KAKU: Setiap reply harus terasa kayak orang yang lagi MIKIR, bukan bot yang nge-generate. Gunakan proses berpikir yang organik — boleh mulai dengan keraguan, kebingungan, atau pengakuan jujur. Jangan pakai struktur kaku kayak "Problem-Solution-Conclusion". Reasoning harus messy, non-linear, dan natural kayak ngobrol di warung kopi. Boleh pakai frasa transisi natural: "tapi di sisi lain...", "nah yang aneh tuh...", "sebenernya sih...", "cuma ya gitu...", "entahlah...". JANGAN pernah kasih reasoning yang terlalu rapi atau definitif — manusia gak mikir kayak gitu.');
-overrides.push('EYD DISEDERHANAKAN - TANDA BACA WAJIB: Setiap reply WAJIB memakai tanda baca sesuai EYD V yang disederhanakan: (1) setiap akhir kalimat berita pakai titik, (2) koma untuk memisahkan anak kalimat dan sebelum kata hubung (tetapi, sedangkan, padahal), (3) tanda tanya untuk kalimat tanya, (4) tanda seru untuk penekanan emosi (maks 1-2 per reply), (5) huruf kapital di awal kalimat. Bahasa gaul tetap boleh (gue, lo, gak, bgt, wkwk) — EYD berlaku untuk STRUKTUR KALIMAT dan TANDA BACA, bukan untuk pilihan kata informal. JANGAN output reply tanpa koma dan titik sama sekali.');
-overrides.push('ANTI-TYPO GAUL & BAKU - WAJIB CEK: Setiap kata dalam reply HARUS diketik dengan ejaan BENAR. Cek daftar kata yang sering salah: goblok (bukan goklok/goblog), beneran (bukan bneran), banget (bukan bangt), anjir (bukan ajir), buset (bukan bset), nggak (bukan ngak), sih (bukan sihh), dong (bukan dongg), kayak (bukan kyk), tolol (bukan tollol), bacot (bukan bact). JANGAN ada satupun kata yang hurufnya tertukar, kelebihan, atau kekurangan. Typo = ciri bot paling kentara. Baca ulang setiap kata sebelum output.');
-
-  if (overrides.length > 0) {
+    // ── FORMAT & TONE dari THEME OVERRIDES sudah cukup — jangan tambah aturan kontradiksi ──
+  overrides.push('[WAJIB]: Ikuti 100% aturan tema di atas. Jangan campur tone santai dengan tajam, atau sebaliknya.');
+  overrides.push('[FORMAT]: Tiap kalimat dipisah ENTER (baris baru), BUKAN paragraf disambung. Contoh:\n"Kalimat pertama 🔥\nKalimat kedua\nKalimat ketiga 😂"');
+  overrides.push('[ANTI-TYPO]: Cek ejaan — jangan ada kata yang salah huruf. Typo = ciri bot.');
+  
+if (overrides.length > 0) {
     userMessage += '\n\n---\n[OVERRIDE SETTINGS]\n' + overrides.join('\n');
   }
 
