@@ -448,6 +448,19 @@ export const PROVIDERS = {
     keyHint: 'Gratis! Dapatkan di build.nvidia.com/settings/api-keys',
     keyUrl: 'https://build.nvidia.com/settings/api-keys',
   },
+  cohere: {
+    label: 'Cohere (Gratis) 🆓',
+    url: 'https://api.cohere.ai/v2/chat',
+    model: 'command-a-03-2025',
+    models: [
+      { id: 'command-a-03-2025', name: '🧠 Command-A ⭐ (Recommended)' },
+      { id: 'c4ai-aya-vision-3-8b', name: '👁️ Aya Vision 8B (Multimodal)' },
+      { id: 'c4ai-aya-expanse-3-8b', name: '🌍 Aya Expanse 8B (23 Bahasa)' },
+      { id: 'c4ai-aya-expanse-3-32b', name: '🌍 Aya Expanse 32B (23 Bahasa)' },
+    ],
+    keyHint: 'Gratis! Dapatkan di dashboard.cohere.com/api-keys',
+    keyUrl: 'https://dashboard.cohere.com/api-keys',
+  },
 };
 
 export const CONFIG = {
