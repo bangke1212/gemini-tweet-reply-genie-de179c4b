@@ -775,13 +775,26 @@ overrides.push('ANTI-TYPO GAUL & BAKU - WAJIB CEK: Setiap kata dalam reply HARUS
     }
 
     const data = await response.json();
-    const choice = data.choices?.[0]?.message;
-    const rawContent =
-      choice?.content ||
-      choice?.reasoning_content ||
-      choice?.reasoning ||
-      data.choices?.[0]?.text ||
-      '';
+    
+    // Cohere v2 response format: message.content is array of {type, text}
+    let rawContent = '';
+    if (data.message?.content && Array.isArray(data.message.content)) {
+      rawContent = data.message.content
+        .filter(c => c.type === 'text')
+        .map(c => c.text)
+        .join('') || '';
+    }
+    
+    // OpenAI / NVIDIA / Groq / Qwen style: choices[0].message.content
+    if (!rawContent) {
+      const choice = data.choices?.[0]?.message;
+      rawContent =
+        choice?.content ||
+        choice?.reasoning_content ||
+        choice?.reasoning ||
+        data.choices?.[0]?.text ||
+        '';
+    }
 
     if (!rawContent) {
       throw new Error('The API returned an empty response. Try a different tweet.');
