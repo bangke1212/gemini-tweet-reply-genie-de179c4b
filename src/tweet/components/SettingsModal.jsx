@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import styles from './SettingsModal.module.css'
-import { PROVIDERS, getProviderModel, saveProviderModel, getNvidiaModel } from '../api'
+import { PROVIDERS, getNvidiaModel, saveNvidiaModel, getProviderModel, saveProviderModel } from '../api'
 
 const LANGUAGES = [
   { value: 'auto', label: 'Auto (Detect)' },
@@ -17,6 +17,15 @@ const THEMES = [
   { value: 'cerdas', emoji: '🧠', label: 'Cerdas', desc: 'Berbobot, insightful, perspektif baru' },
 ]
 
+// Helper: get initial model for any provider
+function getInitialModel(providerKey) {
+  if (typeof window === 'undefined') return ''
+  const saved = localStorage.getItem('provider_model_' + providerKey)
+  if (saved) return saved
+  const cfg = PROVIDERS[providerKey]
+  return cfg?.models?.[0]?.id || ''
+}
+
 export default function SettingsModal({ isOpen, onClose, onSave, currentSettings }) {
   const [apiKey, setApiKey] = useState('')
   const [provider, setProvider] = useState('agnes')
@@ -25,10 +34,17 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
   const [replyCount, setReplyCount] = useState(5)
   const [theme, setTheme] = useState('santai')
   const [langOpen, setLangOpen] = useState(false)
-  const [selectedModel, setSelectedModel] = useState({})
-  const [modelOpen, setModelOpen] = useState(false)
+
+  // Per-provider model states
+  const [nvidiaModel, setNvidiaModel] = useState('')
+  const [nvModelOpen, setNvModelOpen] = useState(false)
+  const nvDropdownRef = useRef(null)
+
+  const [cohereModel, setCohereModel] = useState('')
+  const [cohereModelOpen, setCohereModelOpen] = useState(false)
+  const cohereDropdownRef = useRef(null)
+
   const dropdownRef = useRef(null)
-  const modelDropdownRef = useRef(null)
 
   useEffect(() => {
     if (isOpen) {
@@ -39,8 +55,10 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
       setReplyCount(currentSettings.replyCount ?? 5)
       setTheme(currentSettings.theme || 'santai')
       setLangOpen(false)
-      setSelectedModel(getSelectedModels())
-      setModelOpen(false)
+      setNvidiaModel(getInitialModel('nvidia_free') || (PROVIDERS.nvidia_free?.models?.[0]?.id || ''))
+      setNvModelOpen(false)
+      setCohereModel(getInitialModel('cohere') || (PROVIDERS.cohere?.models?.[0]?.id || ''))
+      setCohereModelOpen(false)
     }
   }, [isOpen, currentSettings])
 
@@ -54,23 +72,28 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
   }, [isOpen, onClose])
 
   useEffect(() => {
-    if (!langOpen && !modelOpen) return
+    if (!langOpen && !nvModelOpen && !cohereModelOpen) return
     function handleClickOutside(e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setLangOpen(false)
       }
-      if (modelDropdownRef.current && !modelDropdownRef.current.contains(e.target)) {
-        setModelOpen(false)
+      if (nvDropdownRef.current && !nvDropdownRef.current.contains(e.target)) {
+        setNvModelOpen(false)
+      }
+      if (cohereDropdownRef.current && !cohereDropdownRef.current.contains(e.target)) {
+        setCohereModelOpen(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [langOpen, modelOpen])
+  }, [langOpen, nvModelOpen, cohereModelOpen])
 
   function handleSave() {
-    const cfg = PROVIDERS[provider]
-    if (cfg?.models && selectedModel[provider]) {
-      saveProviderModel(provider, selectedModel[provider])
+    if (provider === 'nvidia_free' && nvidiaModel) {
+      saveNvidiaModel(nvidiaModel)
+    }
+    if (provider === 'cohere' && cohereModel) {
+      saveProviderModel('cohere', cohereModel)
     }
     onSave({
       provider,
@@ -91,21 +114,21 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
     }
   }
 
-  
-  // Load saved models from localStorage for all providers
-  function getSelectedModels() {
-    const models = {}
-    Object.keys(PROVIDERS).forEach((key) => {
-      if (PROVIDERS[key].models) {
-        models[key] = getProviderModel(key) || PROVIDERS[key].models[0].id
-      }
-    })
-    return models
-  }
-
   if (!isOpen) return null
 
   const providerCfg = PROVIDERS[provider] || PROVIDERS.agnes
+
+  // Get display model name for provider card
+  function getModelDisplay(key, cfg) {
+    if (!cfg.models) return cfg.model
+    if (key === 'nvidia_free') {
+      return cfg.models.find(m => m.id === nvidiaModel)?.name || cfg.models[0]?.name || cfg.model
+    }
+    if (key === 'cohere') {
+      return cfg.models.find(m => m.id === cohereModel)?.name || cfg.models[0]?.name || cfg.model
+    }
+    return cfg.models[0]?.name || cfg.model
+  }
 
   return (
     <div className={styles.overlay} onClick={onClose}>
@@ -120,7 +143,7 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
           </button>
         </div>
 
-        {/* API Key */}
+        {/* Provider */}
         <div className={styles.section}>
           <label className={styles.label}>Provider AI</label>
           <div className={styles.themeGrid} style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))' }}>
@@ -135,13 +158,14 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
                 }}
               >
                 <span className={styles.themeLabel}>{p.label}</span>
-                <span className={styles.themeDesc}>{p.models ? (selectedModel[key] ? (p.models.find(m => m.id === selectedModel[key])?.name || p.models[0]?.name || p.model) : (p.models[0]?.name || p.model)) : p.model}</span>
+                <span className={styles.themeDesc}>{getModelDisplay(key, p)}</span>
               </button>
             ))}
           </div>
           <p className={styles.hint}>Pilih penyedia AI yang ingin dipakai</p>
         </div>
 
+        {/* API Key */}
         <div className={styles.section}>
           <label className={styles.label}>API Key ({providerCfg.label})</label>
           <div className={styles.inputWrap}>
@@ -175,38 +199,37 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
               <li>Buka <a href={providerCfg.keyUrl} target="_blank" rel="noopener noreferrer" className={styles.link}>{providerCfg.keyUrl.replace(/^https?:\/\//, '')}</a></li>
               <li>Login atau daftar ke akun {providerCfg.label}</li>
               <li>Buat API Key baru, lalu copy</li>
-              <li>Paste key di atas, lalu klik Save{providerCfg.models ? (<> (model: <strong>{providerCfg.models.find(m => m.id === (selectedModel[provider] || providerCfg.models[0]?.id))?.name || providerCfg.models[0]?.name || providerCfg.model}</strong>)</>) : (<> (model: <strong>{providerCfg.model}</strong>)</>)}</li>
+              <li>Paste key di atas, lalu klik Save{providerCfg.models ? (<> (model: <strong>{getModelDisplay(provider, providerCfg)}</strong>)</>) : (<> (model: <strong>{providerCfg.model}</strong>)</>)}</li>
             </ol>
           </div>
         </div>
 
-        
-        {/* Model Selector (untuk provider yang punya multiple models) */}
-        {providerCfg.models && providerCfg.models.length > 1 && (
+        {/* NVIDIA Free Model Selector */}
+        {provider === 'nvidia_free' && PROVIDERS.nvidia_free?.models && (
           <div className={styles.section}>
-            <label className={styles.label}>Model {providerCfg.label}</label>
-            <div className={styles.customSelect} ref={modelDropdownRef}>
+            <label className={styles.label}>Model NVIDIA Free</label>
+            <div className={styles.customSelect} ref={nvDropdownRef}>
               <button
                 type="button"
-                className={`${styles.selectTrigger} ${modelOpen ? styles.selectOpen : ''}`}
-                onClick={() => setModelOpen(!modelOpen)}
+                className={`${styles.selectTrigger} ${nvModelOpen ? styles.selectOpen : ''}`}
+                onClick={() => setNvModelOpen(!nvModelOpen)}
               >
-                <span>{providerCfg.models.find((m) => m.id === selectedModel[provider])?.name || providerCfg.models[0]?.name || providerCfg.model}</span>
+                <span>{PROVIDERS.nvidia_free.models.find((m) => m.id === nvidiaModel)?.name || PROVIDERS.nvidia_free.models[0].name}</span>
                 <svg className={styles.selectChevron} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="6 9 12 15 18 9" />
                 </svg>
               </button>
-              {modelOpen && (
+              {nvModelOpen && (
                 <div className={styles.selectDropdown}>
-                  {providerCfg.models.map((m) => (
+                  {PROVIDERS.nvidia_free.models.map((m) => (
                     <button
                       key={m.id}
                       type="button"
-                      className={`${styles.selectOption} ${(selectedModel[provider] || providerCfg.models[0]?.id) === m.id ? styles.optionSelected : ''}`}
-                      onClick={() => { setSelectedModel(prev => ({ ...prev, [provider]: m.id })); setModelOpen(false) }}
+                      className={`${styles.selectOption} ${nvidiaModel === m.id ? styles.optionSelected : ''}`}
+                      onClick={() => { setNvidiaModel(m.id); setNvModelOpen(false) }}
                     >
                       <span>{m.name}</span>
-                      {(selectedModel[provider] || providerCfg.models[0]?.id) === m.id && (
+                      {nvidiaModel === m.id && (
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
@@ -216,10 +239,50 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
                 </div>
               )}
             </div>
-            <p className={styles.hint}>Pilih model yang ingin dipakai. Model 🧠 cocok untuk reasoning, ⚡ untuk kecepatan, 🌍 untuk multibahasa, 💻 untuk coding.</p>
+            <p className={styles.hint}>Pilih model gratis dari NVIDIA NIM. Model bertanda 🧠 cocok untuk reasoning.</p>
           </div>
         )}
-{/* Language */}
+
+        {/* Cohere Model Selector */}
+        {provider === 'cohere' && PROVIDERS.cohere?.models && (
+          <div className={styles.section}>
+            <label className={styles.label}>Model Cohere (Gratis)</label>
+            <div className={styles.customSelect} ref={cohereDropdownRef}>
+              <button
+                type="button"
+                className={`${styles.selectTrigger} ${cohereModelOpen ? styles.selectOpen : ''}`}
+                onClick={() => setCohereModelOpen(!cohereModelOpen)}
+              >
+                <span>{PROVIDERS.cohere.models.find((m) => m.id === cohereModel)?.name || PROVIDERS.cohere.models[0].name}</span>
+                <svg className={styles.selectChevron} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+              {cohereModelOpen && (
+                <div className={styles.selectDropdown}>
+                  {PROVIDERS.cohere.models.map((m) => (
+                    <button
+                      key={m.id}
+                      type="button"
+                      className={`${styles.selectOption} ${cohereModel === m.id ? styles.optionSelected : ''}`}
+                      onClick={() => { setCohereModel(m.id); setCohereModelOpen(false) }}
+                    >
+                      <span>{m.name}</span>
+                      {cohereModel === m.id && (
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <p className={styles.hint}>Pilih model Cohere gratis. 🧠 Command-A paling pintar, 💪 Command-R+ untuk RAG, 🚀 Command-R7B ultra cepat.</p>
+          </div>
+        )}
+
+        {/* Language */}
         <div className={styles.section}>
           <label className={styles.label}>Bahasa Output</label>
           <div className={styles.customSelect} ref={dropdownRef}>
