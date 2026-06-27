@@ -543,6 +543,18 @@ export function saveTheme(theme) {
   localStorage.setItem('reply_theme', theme);
 }
 
+
+// Generic provider model storage (supports all providers with models[])
+export function getProviderModel(provider) {
+  if (typeof window === 'undefined') return '';
+  return localStorage.getItem('provider_model_' + provider) || '';
+}
+
+export function saveProviderModel(provider, model) {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem('provider_model_' + provider, model);
+}
+
 export function getNvidiaModel() {
   if (typeof window === 'undefined') return '';
   return localStorage.getItem('nvidia_model') || '';
@@ -673,11 +685,11 @@ export async function generateReply(tweetText, apiKey, options = {}) {
   } = options;
   const cfg = PROVIDERS[provider] || PROVIDERS.agnes;
   
-  // NVIDIA Free: support custom model selection
+  // Support custom model selection for all providers with models[]
   let model = cfg.model;
-  if (provider === 'nvidia_free') {
-    const nvModel = getNvidiaModel();
-    if (nvModel) model = nvModel;
+  if (cfg.models) {
+    const savedModel = getProviderModel(provider);
+    if (savedModel) model = savedModel;
   }
 
   let userMessage = tweetText;

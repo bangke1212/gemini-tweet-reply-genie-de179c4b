@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import styles from './SettingsModal.module.css'
-import { PROVIDERS, getNvidiaModel, saveNvidiaModel } from '../api'
+import { PROVIDERS, getProviderModel, saveProviderModel, getNvidiaModel } from '../api'
 
 const LANGUAGES = [
   { value: 'auto', label: 'Auto (Detect)' },
@@ -25,10 +25,10 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
   const [replyCount, setReplyCount] = useState(5)
   const [theme, setTheme] = useState('santai')
   const [langOpen, setLangOpen] = useState(false)
-  const [nvidiaModel, setNvidiaModel] = useState('')
-  const [nvModelOpen, setNvModelOpen] = useState(false)
+  const [selectedModel, setSelectedModel] = useState({})
+  const [modelOpen, setModelOpen] = useState(false)
   const dropdownRef = useRef(null)
-  const nvDropdownRef = useRef(null)
+  const modelDropdownRef = useRef(null)
 
   useEffect(() => {
     if (isOpen) {
@@ -39,7 +39,7 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
       setReplyCount(currentSettings.replyCount ?? 5)
       setTheme(currentSettings.theme || 'santai')
       setLangOpen(false)
-      setNvidiaModel(getNvidiaModel() || (PROVIDERS.nvidia_free?.models?.[0]?.id || ''))
+      setSelectedModel(getSelectedModels())
       setNvModelOpen(false)
     }
   }, [isOpen, currentSettings])
@@ -54,22 +54,23 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
   }, [isOpen, onClose])
 
   useEffect(() => {
-    if (!langOpen && !nvModelOpen) return
+    if (!langOpen && !modelOpen) return
     function handleClickOutside(e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setLangOpen(false)
       }
-      if (nvDropdownRef.current && !nvDropdownRef.current.contains(e.target)) {
-        setNvModelOpen(false)
+      if (modelDropdownRef.current && !modelDropdownRef.current.contains(e.target)) {
+        setModelOpen(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [langOpen, nvModelOpen])
+  }, [langOpen, modelOpen])
 
   function handleSave() {
-    if (provider === 'nvidia_free' && nvidiaModel) {
-      saveNvidiaModel(nvidiaModel)
+    const cfg = PROVIDERS[provider]
+    if (cfg?.models && selectedModel[provider]) {
+      saveProviderModel(provider, selectedModel[provider])
     }
     onSave({
       provider,
@@ -88,6 +89,18 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
     } catch {
       // silently ignore clipboard errors
     }
+  }
+
+  
+  // Load saved models from localStorage for all providers
+  function getSelectedModels() {
+    const models = {}
+    Object.keys(PROVIDERS).forEach((key) => {
+      if (PROVIDERS[key].models) {
+        models[key] = getProviderModel(key) || PROVIDERS[key].models[0].id
+      }
+    })
+    return models
   }
 
   if (!isOpen) return null
@@ -122,7 +135,7 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
                 }}
               >
                 <span className={styles.themeLabel}>{p.label}</span>
-                <span className={styles.themeDesc}>{p.model}</span>
+                <span className={styles.themeDesc}>{p.models ? (selectedModel[key] ? p.models.find(m => m.id === selectedModel[key])?.name : p.models[0].name) : p.model}</span>
               </button>
             ))}
           </div>

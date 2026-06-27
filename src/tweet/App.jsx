@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import styles from './App.module.css';
-import { getApiKey, saveApiKey, getLanguage, saveLanguage, getTemperature, saveTemperature, getReplyCount, saveReplyCount, getTheme, saveTheme, getProvider, saveProvider, PROVIDERS, getNvidiaModel, generateReply, parseResponse } from './api';
+import { getApiKey, saveApiKey, getLanguage, saveLanguage, getTemperature, saveTemperature, getReplyCount, saveReplyCount, getTheme, saveTheme, getProvider, saveProvider, PROVIDERS, getProviderModel, generateReply, parseResponse } from './api';
 import ReplyCard from './components/ReplyCard';
 import MetaBar from './components/MetaBar';
 import SettingsModal from './components/SettingsModal';
@@ -79,7 +79,7 @@ export default function App() {
         replyCount: getReplyCount(),
         theme: getTheme(),
         provider: getProvider(),
-        nvidiaModel: getNvidiaModel(),
+        providerModel: (() => { const p = getProvider(); return getProviderModel(p) || '' })(),
       });
       const parsed = parseResponse(raw);
       setResults(parsed);
