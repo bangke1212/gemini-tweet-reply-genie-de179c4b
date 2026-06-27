@@ -12,4 +12,11 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  nitro: {
+    preset: "vercel",
+    vercel: {
+      // Ensure functions are deployed correctly for SSR
+      regions: ["sin1", "hkg1"],
+    },
+  },
 });
