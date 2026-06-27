@@ -40,7 +40,7 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
       setTheme(currentSettings.theme || 'santai')
       setLangOpen(false)
       setSelectedModel(getSelectedModels())
-      setNvModelOpen(false)
+      setModelOpen(false)
     }
   }, [isOpen, currentSettings])
 
@@ -175,38 +175,38 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
               <li>Buka <a href={providerCfg.keyUrl} target="_blank" rel="noopener noreferrer" className={styles.link}>{providerCfg.keyUrl.replace(/^https?:\/\//, '')}</a></li>
               <li>Login atau daftar ke akun {providerCfg.label}</li>
               <li>Buat API Key baru, lalu copy</li>
-              <li>Paste key di atas, lalu klik Save{provider === 'nvidia_free' && nvidiaModel ? (<> (model: <strong>{PROVIDERS.nvidia_free.models.find(m => m.id === nvidiaModel)?.name || nvidiaModel}</strong>)</>) : (<> (model: <strong>{providerCfg.model}</strong>)</>)}</li>
+              <li>Paste key di atas, lalu klik Save{providerCfg.models ? (<> (model: <strong>{providerCfg.models.find(m => m.id === (selectedModel[provider] || providerCfg.models[0]?.id))?.name || providerCfg.models[0]?.name || providerCfg.model}</strong>)</>) : (<> (model: <strong>{providerCfg.model}</strong>)</>)}</li>
             </ol>
           </div>
         </div>
 
         
-        {/* NVIDIA Free Model Selector */}
-        {provider === 'nvidia_free' && PROVIDERS.nvidia_free?.models && (
+        {/* Model Selector (untuk provider yang punya multiple models) */}
+        {providerCfg.models && providerCfg.models.length > 1 && (
           <div className={styles.section}>
-            <label className={styles.label}>Model NVIDIA Free</label>
-            <div className={styles.customSelect} ref={nvDropdownRef}>
+            <label className={styles.label}>Model {providerCfg.label}</label>
+            <div className={styles.customSelect} ref={modelDropdownRef}>
               <button
                 type="button"
-                className={`${styles.selectTrigger} ${nvModelOpen ? styles.selectOpen : ''}`}
-                onClick={() => setNvModelOpen(!nvModelOpen)}
+                className={`${styles.selectTrigger} ${modelOpen ? styles.selectOpen : ''}`}
+                onClick={() => setModelOpen(!modelOpen)}
               >
-                <span>{PROVIDERS.nvidia_free.models.find((m) => m.id === nvidiaModel)?.name || PROVIDERS.nvidia_free.models[0].name}</span>
+                <span>{providerCfg.models.find((m) => m.id === selectedModel[provider])?.name || providerCfg.models[0]?.name || providerCfg.model}</span>
                 <svg className={styles.selectChevron} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="6 9 12 15 18 9" />
                 </svg>
               </button>
-              {nvModelOpen && (
+              {modelOpen && (
                 <div className={styles.selectDropdown}>
-                  {PROVIDERS.nvidia_free.models.map((m) => (
+                  {providerCfg.models.map((m) => (
                     <button
                       key={m.id}
                       type="button"
-                      className={`${styles.selectOption} ${nvidiaModel === m.id ? styles.optionSelected : ''}`}
-                      onClick={() => { setNvidiaModel(m.id); setNvModelOpen(false) }}
+                      className={`${styles.selectOption} ${(selectedModel[provider] || providerCfg.models[0]?.id) === m.id ? styles.optionSelected : ''}`}
+                      onClick={() => { setSelectedModel(prev => ({ ...prev, [provider]: m.id })); setModelOpen(false) }}
                     >
                       <span>{m.name}</span>
-                      {nvidiaModel === m.id && (
+                      {(selectedModel[provider] || providerCfg.models[0]?.id) === m.id && (
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
@@ -216,7 +216,7 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
                 </div>
               )}
             </div>
-            <p className={styles.hint}>Pilih model gratis dari NVIDIA NIM. Model bertanda 🧠 cocok untuk reasoning. Model bertanda * perlu register di halaman modelnya (klik \"Try API\")</p>
+            <p className={styles.hint}>Pilih model yang ingin dipakai. Model 🧠 cocok untuk reasoning, ⚡ untuk kecepatan, 🌍 untuk multibahasa, 💻 untuk coding.</p>
           </div>
         )}
 {/* Language */}
