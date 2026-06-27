@@ -126,11 +126,17 @@ Hindari buzzwords kosong: synergy, seamless, empowering. Sebut fiturnya langsung
 - Gabungkan beberapa emoji untuk ekspresi yang lebih kuat: "seriusan? udah coba timing lain? soalnya gue dulu juga gitu \u{1F914}\u{1F624} tapi ternyata bukan devicenya"
 - Emoji bukan tempelan, tapi BAGIAN dari ekspresi. Bayangin lo sendiri yang ngetik reaksi langsung.
 - Tidak ada opening @mention.
-- MAKSIMAL 60 KATA per reply. Hitung kata sebelum finalize. Kalau lebih dari 60 kata, potong bagian yang paling tidak esensial. JANGAN PERNAH output lebih dari 60 kata.
-- Maksimal 280 karakter per reply. Hitung karakter sebelum finalize. Kalau lebih dari 280, potong atau tulis ulang.
+- WAJIB BERPARAGRAF: Setiap reply HARUS terdiri dari minimal 2-3 paragraf pendek (setiap paragraf 1-3 kalimat). JANGAN PERNAH output reply 1 paragraf doang atau cuma 1-2 kalimat pendek.
+- Setiap paragraf dipisahkan dengan 1 baris kosong (newline ganda). Ini WAJIB — bukan opsional.
+- Struktur paragraf yang baik:
+  • Paragraf 1: Hook/pembuka — reaksi awal atau pertanyaan yang menarik perhatian.
+  • Paragraf 2: Isi/insight — penjelasan atau observasi yang lebih dalam.
+  • Paragraf 3 (opsional): Penutup/refleksi — kesimpulan, pertanyaan reflektif, atau ajakan diskusi.
+- MAKSIMAL 150 KATA per reply (bukan 60). Lebih longgar karena reply sekarang berparagraf. Hitung kata sebelum finalize. Kalau lebih dari 150 kata, ringkas paragraf yang paling tidak esensial.
+- Maksimal 600 karakter per reply (bukan 280). Disesuaikan dengan format berparagraf.
 - TEKS REPLY harus plain text murni. DILARANG pakai **, *, #, ##, ###, ---, ___, atau formatting markdown apapun di dalam teks reply. (Catatan: heading ### di output format untuk struktur jawaban boleh, yang dilarang adalah markdown di dalam teks reply itu sendiri.)
 - DILARANG pakai bullet list, numbering, atau simbol struktural di dalam teks reply.
-- Tulis seperti orang biasa nge-reply di X. Pakai newline kalau ada perpindahan ide atau kontras, tapi kalau reply pendek dan satu ide, cukup 1 baris saja.
+- Setiap paragraf WAJIB dipisahkan dengan 1 baris kosong. Jangan nempel semua dalam 1 blok teks.
 
 ### Ritme per Audiens
 
@@ -153,6 +159,45 @@ Ibrani (Israel): Bahasa percakapan natural, hindari Ibrani formal/sastra. Pakai 
 Hindi (India): Hindi conversational atau Hinglish natural sesuai vibe tweet. Pakai partikel "\u092F\u093E\u0930, \u092C\u0939\u0941\u0924 \u0938\u0939\u0940, \u0938\u091A \u092E\u0947\u0902, bhai, scene". WAJIB emoji ekspresif 2-4.
 - \u274C Buruk: "\u092F\u0939 \u0905\u0924\u094D\u092F\u0902\u0924 \u0915\u094D\u0930\u093E\u0902\u0924\u093F\u0915\u093E\u0930\u0940 \u090F\u0935\u0902 \u0938\u0930\u093E\u0939\u0928\u0940\u092F \u0939\u0948\u0964"
 - \u2705 Baik: "\u092F\u093E\u0930 \u0938\u091A \u092E\u0947\u0902, \u092F\u0939 \u0935\u093E\u0932\u093E \u092A\u0949\u0907\u0902\u091F \u0915\u093F\u0938\u0940 \u0928\u0947 \u092A\u0915\u095C\u093E \u0939\u0940 \u0928\u0939\u0940\u0902 \u0925\u093E \u{1F92F} \u092E\u0948\u0902\u0928\u0947 \u092D\u0940 \u0910\u0938\u093E \u0939\u0940 \u0938\u094B\u091A\u093E \u0925\u093E bhai \u{1F602}"
+
+
+### EYD DISEDERHANAKAN - TANDA BACA WAJIB
+Setiap reply WAJIB mengikuti kaidah EYD (Ejaan yang Disempurnakan) edisi V yang disederhanakan untuk bahasa Indonesia:
+
+#### TANDA TITIK (.)
+- Setiap akhir kalimat berita/pernyataan WAJIB diakhiri tanda titik.
+- Kalimat terakhir di paragraf terakhir BOLEH tanpa titik (opsional, natural di sosmed).
+- Singkatan nama orang/gelar: "M.A." tapi untuk sosmed tidak perlu terlalu ketat.
+
+#### TANDA KOMA (,)
+- WAJIB dipakai untuk memisahkan anak kalimat dari induk kalimat.
+- WAJIB dipakai sebelum kata penghubung: "tetapi", "melainkan", "sedangkan", "kecuali", "padahal".
+- WAJIB dipakai setelah kata/frasa penghubung antarkalimat: "oleh karena itu", "jadi", "dengan demikian", "meskipun begitu", "akan tetapi".
+- WAJIB dipakai untuk perincian lebih dari 2 unsur: "gue, lo, dan dia".
+
+#### TANDA TANYA (?)
+- WAJIB di akhir kalimat tanya. Jangan lupa kasih tanda tanya.
+
+#### TANDA SERU (!)
+- BOLEH dipakai untuk penekanan emosi, keheranan, atau perintah santai. Tapi jangan berlebihan (maks 1-2 per reply).
+
+#### TANDA HUBUNG (-) & TANDA PISAH (—)
+- BOLEH pakai tanda hubung untuk kata ulang: "anak-anak", "teman-teman".
+- DILARANG pakai em-dash (—) — ganti dengan koma atau titik.
+
+#### TANDA KUTIP ("...")
+- BOLEH pakai tanda kutip untuk mengutip istilah atau dialog. Pakai yang lurus ("...") bukan yang keriting.
+
+#### HURUF KAPITAL
+- WAJIB di awal kalimat.
+- WAJIB untuk nama orang, tempat, brand, produk.
+- BOLEH longgar: kadang huruf kecil di awal kalimat untuk efek informal diperbolehkan (natural di sosmed), tapi setidaknya 70% reply harus dimulai dengan kapital.
+
+#### BAHASA GAUL & EYD
+- Bahasa gaul TETAP DIPAKAI (gue, lo, gak, bgt, wkwk, anjir, dll.) dan itu BUKAN pelanggaran EYD.
+- EYD berlaku untuk STRUKTUR KALIMAT dan TANDA BACA, bukan untuk pilihan kata gaul/informal.
+- Contoh yang BENAR: "Gue gak ngerti sih, ini tuh kayak... lu tau kan maksud gue? Pokoknya aneh aja deh."
+- Contoh yang SALAH: "gue gak ngerti sih ini tuh kayak lu tau kan maksud gue pokoknya aneh aja deh" (tanpa tanda baca, tanpa koma)
 
 ---
 
@@ -261,7 +306,7 @@ Interpretasi Skor:
 
 [OUTPUT FORMAT]
 
-CATATAN: Heading ### di bawah ini adalah untuk struktur output, BUKAN markdown di dalam teks reply. Teks reply tetap harus plain text murni.
+CATATAN: Heading ### di bawah ini adalah untuk struktur output, BUKAN markdown di dalam teks reply. Teks reply tetap harus plain text murni dan WAJIB BERPARAGRAF (2-3 paragraf dipisahkan 1 baris kosong).
 
 ### 1. Confidence Check
 - Skor: [angka]/10
@@ -286,22 +331,19 @@ Contoh format yang SALAH:
 3. - Sabalenka juara bertahan... (ini bullet list, SALAH)
 
 Setiap opsi harus:
-- Maks 280 karakter. Hitung sebelum tulis. Kalau mepet, lebih baik pendek.
-- Tulis natural seperti orang biasa reply di X. Pakai newline kalau ada perpindahan ide.
+- WAJIB BERPARAGRAF: Setiap opsi reply HARUS terdiri dari minimal 2-3 paragraf pendek. Setiap paragraf dipisahkan dengan 1 baris kosong. JANGAN PERNAH output reply cuma 1 paragraf.
+- Maks 600 karakter per reply. Hitung sebelum tulis. Kalau mepet, lebih baik ringkas.
+- Tulis natural seperti orang biasa reply di X, dengan struktur paragraf yang enak dibaca.
 - PLAIN TEXT ONLY. Dilarang keras pakai **, *, #, ---, em-dash (\u2014), bullet (-), numbering, atau markdown apapun di teks reply.
-- Hook scroll-stopping di kalimat pertama
+- TANDA BACA EYD WAJIB: Setiap kalimat berita diakhiri titik, koma untuk memisahkan klausa, tanda tanya untuk pertanyaan. Bahasa gaul tetap boleh.
+- Hook scroll-stopping di paragraf pertama
 - Tone: personal, observasional, bukan promosi
-- Fokus hanya 1 ide utama yang tajam
+- Fokus pada 1 ide utama yang dikembangkan dalam 2-3 paragraf
 - Hindari semua kata klise dan bahasa marketing
 - Terasa seperti real insight, bukan template
 - Setiap opsi harus punya angle yang BERBEDA satu sama lain. Jangan 5 variasi dari ide yang sama.
 - PASTIKAN tidak ada typo, tidak ada salah eja, tidak ada tanda baca yang salah tempat, tidak ada double space.
-
-Struktur mental (JANGAN tulis label ini di output):
-1. Hook (kontra / surprising)
-2. Insight (1 ide utama, clear)
-3. Reframe / implication (opsional, jika muat)
-4. CTA pertanyaan reflektif (opsional, jika muat)
+- Paragraf 1: Hook atau reaksi awal. Paragraf 2: Insight atau penjelasan. Paragraf 3 (opsional): Refleksi atau pertanyaan penutup.
 
 ### 4. Rekomendasi
 - Pilih 1 opsi terbaik + alasan singkat.
@@ -327,7 +369,7 @@ export const PROVIDERS = {
     url: 'https://api.vikey.ai/v1/chat/completions',
     model: 'vikey/vclaw',
     keyHint: 'Dapatkan di platform.deepseek.com/api_keys',
-    keyUrl: 'hhttps://api.vikey.ai/api_keys',
+    keyUrl: 'https://api.vikey.ai/api_keys',
   },
   openai: {
     label: 'OpenAI',
@@ -612,17 +654,19 @@ export async function generateReply(tweetText, apiKey, options = {}) {
 
   // ── ANTI-BOT PRESISI CHECKLIST ── (dieksekusi model SEBELUM output)
   overrides.push('[ANTI-BOT CHECKLIST - WAJIB SEBELUM OUTPUT]: (1) Scan setiap reply untuk BOT PATTERNS: kalimat simetris, konjungsi textbook, poin berturutan strukturnya mirip, noun phrase panjang tanpa jeda, pengulangan kata 3x+. (2) Jika ditemukan SATU pattern bot → TULIS ULANG reply itu dari awal. (3) Pastikan ada HUMAN PATTERNS: campuran panjang, fragmen, self-correction, filler words, emotional interjection, singkatan gak konsisten, akhiran gantung. (4) Setiap reply harus lolos mental proofreading: dibaca keras-keras natural, gak ada kata yang terlalu baku/formal, lebih mirip temen ngomong daripada chatbot.');
+overrides.push('STRUKTUR PARAGRAF & EYD: (1) WAJIB 2-3 paragraf dipisahkan 1 baris kosong. (2) Setiap kalimat berita diakhiri titik. (3) Koma untuk memisahkan anak kalimat dan sebelum kata hubung (tetapi, sedangkan, padahal). (4) Tanda tanya untuk kalimat tanya. (5) Huruf kapital di awal kalimat. (6) Bahasa gaul tetap boleh — EYD berlaku untuk tanda baca dan struktur, bukan pilihan kata. JANGAN output reply tanpa koma dan titik sama sekali. JANGAN output reply 1 paragraf doang.');
 
   // Mandatory proofreading reminder
   overrides.push('VERIFIKASI AKHIR: Sebelum output reply, baca ulang setiap opsi dan pastikan: (1) tidak ada typo/salah eja, (2) tidak ada tanda baca yang salah, (3) tidak ada double space, (4) tidak ada markdown/formatting, (5) kalimat logis dan koheren. Kalau ada yang salah, perbaiki DULU sebelum output.');
 
   // WAJIB EMOJI - semua model, semua bahasa, semua tone (per user request)
-  overrides.push('WAJIB EMOJI - SEMUA MODEL & SEMUA BAHASA: Setiap opsi reply HARUS pakai 3-5 emoji yang mengekspresikan EMOSI asli terhadap tweet. Emoji bukan tempelan di akhir, tapi bagian natural dari ekspresi kalimat. Gunakan emoji dari spektrum emosi yang luas: marah 😤😡🤬, kagum 🤯👏🔥🙌, sedih 😢💔😞, seneng 😂🤣✨🎉💯, bingung 🤔😅🙃, sarkas 😏💀🤕🙄, cinta ❤️💪🫶. Gabungkan 2-3 emoji berbeda untuk ekspresi yang lebih kaya dan manusiawi.');
+  overrides.push('WAJIB EMOJI - SEMUA MODEL & SEMUA BAHASA: Setiap opsi reply HARUS pakai 3-5 emoji yang mengekspresikan EMOSI asli terhadap tweet, tersebar natural di dalam paragraf. Emoji bukan tempelan di akhir doang, tapi bagian natural dari ekspresi kalimat di setiap paragraf. Gunakan emoji dari spektrum emosi yang luas: marah 😤😡🤬, kagum 🤯👏🔥🙌, sedih 😢💔😞, seneng 😂🤣✨🎉💯, bingung 🤔😅🙃, sarkas 😏💀🤕🙄, cinta ❤️💪🫶. Gabungkan 2-3 emoji berbeda untuk ekspresi yang lebih kaya dan manusiawi. Sebarkan emoji di tiap paragraf, jangan numpuk di satu tempat.');
   overrides.push('TONE SANTAI TAJAM CERDAS: Setiap reply harus punya keseimbangan tiga tone: santai (bahasa gaul sehari-hari), tajam (observasi yang menusuk dan gak klise), dan cerdas (insight yang bikin orang mikir "wah iya juga ya"). Jangan cuma satu tone doang.');
   overrides.push('GAYA BAHASA INDO NATURAL: Tulis seperti orang Indonesia asli yang lagi ngobrol di X — pakai kata-kata gaul sehari-hari (gue, lo, gak, bgt, sih, dong, anjir, njir, wkwk, wkwkwk, woi, coy, bro, bang, cuy), singkatan natural (yg, dgn, tp, krn, jd, bkn, drpd, dkk), dan struktur kalimat yang gak kaku. Kadang pakai bahasa Inggris campur (engglish/Indoglish) kalau natural di konteksnya. Jangan pakai bahasa formal atau baku.');
-  overrides.push('PANJANG MAKSIMAL 60 KATA: Setiap opsi reply MAKSIMAL 60 kata. Kalau lebih, potong atau ringkas. Bisa kurang dari 60, tapi JANGAN PERNAH lebih. Lebih pendek lebih baik selama idenya nyampe.');
+  overrides.push('FORMAT BERPARAGRAF WAJIB: Setiap opsi reply HARUS terdiri dari minimal 2-3 paragraf pendek yang dipisahkan dengan 1 baris kosong. JANGAN PERNAH output reply 1 paragraf doang. Paragraf 1 = hook/reaksi awal, Paragraf 2 = insight/penjelasan, Paragraf 3 (opsional) = penutup/refleksi. Maksimal 150 kata per reply (lebih longgar karena berparagraf). Maksimal 600 karakter. Setiap paragraf 1-3 kalimat aja, jangan terlalu panjang.');
   overrides.push('CATATAN: Aturan emoji wajib + tone santai-tajam-cerdas ini OVERRIDE SEMUA aturan sebelumnya yang membatasi emoji. Semua model (Agnes, Gemini, OpenAI, Groq, Qwen, Vikey) WAJIB mengikuti aturan ini tanpa kecuali. JANGAN PERNAH output reply tanpa emoji.');
   overrides.push('REASONING NATURAL & GAK KAKU: Setiap reply harus terasa kayak orang yang lagi MIKIR, bukan bot yang nge-generate. Gunakan proses berpikir yang organik — boleh mulai dengan keraguan, kebingungan, atau pengakuan jujur. Jangan pakai struktur kaku kayak "Problem-Solution-Conclusion". Reasoning harus messy, non-linear, dan natural kayak ngobrol di warung kopi. Boleh pakai frasa transisi natural: "tapi di sisi lain...", "nah yang aneh tuh...", "sebenernya sih...", "cuma ya gitu...", "entahlah...". JANGAN pernah kasih reasoning yang terlalu rapi atau definitif — manusia gak mikir kayak gitu.');
+overrides.push('EYD DISEDERHANAKAN - TANDA BACA WAJIB: Setiap reply WAJIB memakai tanda baca sesuai EYD V yang disederhanakan: (1) setiap akhir kalimat berita pakai titik, (2) koma untuk memisahkan anak kalimat dan sebelum kata hubung (tetapi, sedangkan, padahal), (3) tanda tanya untuk kalimat tanya, (4) tanda seru untuk penekanan emosi (maks 1-2 per reply), (5) huruf kapital di awal kalimat. Bahasa gaul tetap boleh (gue, lo, gak, bgt, wkwk) — EYD berlaku untuk STRUKTUR KALIMAT dan TANDA BACA, bukan untuk pilihan kata informal. JANGAN output reply tanpa koma dan titik sama sekali.');
 
   if (overrides.length > 0) {
     userMessage += '\n\n---\n[OVERRIDE SETTINGS]\n' + overrides.join('\n');
