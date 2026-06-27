@@ -387,7 +387,14 @@ Setiap opsi harus:
 
 ### 4. Rekomendasi
 - Pilih 1 opsi terbaik + alasan singkat.
-- Sebutkan teknik yang dipakai: Social Proof, Curiosity Gap, atau Authority.`;
+- Sebutkan teknik yang dipakai: Social Proof, Curiosity Gap, atau Authority.
+
+[PANJANG MINIMAL & MAKSIMAL - WAJIB DIPATUHI]
+- SETIAP opsi reply WAJIB minimal 40 kata dan maksimal 120 kata.
+- Jangan pernah bikin reply kurang dari 40 kata — terlalu pendek terkesan bot.
+- Jangan pernah bikin reply lebih dari 120 kata — terlalu panjang bikin orang skip.
+- Hitung kata sebelum output. Kalau kurang dari 40, tambahin insight atau konteks. Kalau lebih dari 120, pangkas yang gak penting.
+- Ini aturan MUTLAK. Kalau kamu melanggar, reply kamu tidak berguna.`;
 
 export const PROVIDERS = {
   agnes: {
