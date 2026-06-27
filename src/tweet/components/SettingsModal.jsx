@@ -12,9 +12,9 @@ const LANGUAGES = [
 ]
 
 const THEMES = [
-  { value: 'santai', emoji: '😎', label: 'Santai', desc: 'Ringan, relatable, kayak ngobrol sama teman' },
-  { value: 'tajam', emoji: '🔥', label: 'Tajam', desc: 'Bold, sarkasme cerdas, edgy tapi elegan' },
-  { value: 'cerdas', emoji: '🧠', label: 'Cerdas', desc: 'Berbobot, insightful, perspektif baru' },
+  { value: 'santai', emoji: '😎', label: 'Santai', desc: 'Support & setuju, ngobrol kayak temen' },
+  { value: 'tajam', emoji: '🔥', label: 'Tajam', desc: 'Kontra & menyindir, sarkasme cerdas' },
+  { value: 'cerdas', emoji: '🧠', label: 'Cerdas', desc: 'Opini tegas + kasih solusi konkret' },
 ]
 
 // Helper: get initial model for any provider
