@@ -433,7 +433,12 @@ export async function generateReply(tweetText, apiKey, options = {}) {
   overrides.push('[WAJIB]: Ikuti 100% aturan tema di atas. Jangan campur tone santai dengan tajam, atau sebaliknya.');
   overrides.push('[FORMAT]: Tiap kalimat dipisah ENTER (baris baru), BUKAN paragraf disambung. Contoh:\n"Kalimat pertama 🔥\nKalimat kedua\nKalimat ketiga 😂"');
   overrides.push('[ANTI-TYPO]: Cek ejaan — jangan ada kata yang salah huruf. Typo = ciri bot.');
-  
+
+  // ── CAKUPAN LUAS & ANTI-MONOTON (WAJIB UNTUK SEMUA MODEL) ──
+  overrides.push('[CAKUPAN LUAS - WAJIB]: Setiap opsi reply HARUS punya angle BERBEDA. Gunakan 5 dimensi: (1) Relate Personal — cerita pengalaman, (2) Pertanyaan Reflektif — tanya balik bikin mikir, (3) Kontrarian/Disruptor — tantang asumsi dengan sopan, (4) Observasi Data — fakta/konteks baru, (5) Humor/Sarkasme — twist lucu atau satire.');
+  overrides.push('[ANTI-MONOTON - WAJIB]: Variasikan: tone (santai vs tegang vs skeptis vs excited), struktur kalimat (pendek vs panjang vs naratif), angle (makro big picture vs mikro detail vs meta), persona (temen curhat vs kritikus vs orang awam vs observer). JANGAN output 2+ opsi dengan vibe yang sama.');
+  overrides.push('[VARIASI PANJANG - WAJIB]: Campur 2 pendek (1-2 kalimat) + 2 medium (2-3 kalimat) + 1 panjang (3-4 kalimat). Jangan semua opsi panjangnya mirip.');
+
 if (overrides.length > 0) {
     userMessage += '\n\n---\n[OVERRIDE SETTINGS]\n' + overrides.join('\n');
   }
