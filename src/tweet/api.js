@@ -78,12 +78,18 @@ export const PROVIDERS = {
     keyHint: 'Dapatkan API Key di NVIDIA Build',
     keyUrl: 'https://build.nvidia.com/',
   },
-  deepseek: {
-    label: 'Vikey',
-    url: 'https://api.vikey.ai/v1/chat/completions',
-    model: 'vikey/vclaw',
-    keyHint: 'Dapatkan di platform.deepseek.com/api_keys',
-    keyUrl: 'https://api.vikey.ai/api_keys',
+  gemini: {
+    label: 'Gemini AI Studio ☄️',
+    url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
+    model: 'gemini-2.5-flash',
+    models: [
+      { id: 'gemini-2.5-flash', name: '☄️ Gemini 2.5 Flash ⭐ (Recommended)' },
+      { id: 'gemini-2.5-flash-lite', name: 'Gemini 2.5 Flash-Lite — Budget' },
+      { id: 'gemini-2.5-pro', name: '🧠 Gemini 2.5 Pro — Premium Reasoning' },
+      { id: 'gemini-3-flash-preview', name: '🔥 Gemini 3 Flash — Latest Gen' },
+    ],
+    keyHint: 'Gratis! Dapatkan di aistudio.google.com/app/apikey',
+    keyUrl: 'https://aistudio.google.com/app/apikey',
   },
   openai: {
     label: 'OpenAI',
