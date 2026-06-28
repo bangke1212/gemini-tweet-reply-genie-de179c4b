@@ -71,13 +71,6 @@ export const PROVIDERS = {
     keyHint: 'Dapatkan di platform.agnes-ai.com/settings/apiKeys',
     keyUrl: 'https://platform.agnes-ai.com/settings/apiKeys',
   },
-  Nvidia: {
-    label: 'NVIDIA Model',
-    url: 'https://integrate.api.nvidia.com/v1/chat/completions',
-    model: 'meta/llama-3.3-70b-instruct',
-    keyHint: 'Dapatkan API Key di NVIDIA Build',
-    keyUrl: 'https://build.nvidia.com/',
-  },
   gemini: {
     label: 'Gemini AI Studio ☄️',
     url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
