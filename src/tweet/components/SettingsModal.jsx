@@ -40,6 +40,10 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
   const [nvModelOpen, setNvModelOpen] = useState(false)
   const nvDropdownRef = useRef(null)
 
+  const [agnesModel, setAgnesModel] = useState('')
+  const [agnesModelOpen, setAgnesModelOpen] = useState(false)
+  const agnesDropdownRef = useRef(null)
+
   const [geminiModel, setGeminiModel] = useState('')
   const [geminiModelOpen, setGeminiModelOpen] = useState(false)
   const geminiDropdownRef = useRef(null)
@@ -61,6 +65,8 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
       setLangOpen(false)
       setNvidiaModel(getInitialModel('nvidia_free') || (PROVIDERS.nvidia_free?.models?.[0]?.id || ''))
       setNvModelOpen(false)
+      setAgnesModel(getInitialModel('agnes') || (PROVIDERS.agnes?.models?.[0]?.id || ''))
+      setAgnesModelOpen(false)
       setGeminiModel(getInitialModel('gemini') || (PROVIDERS.gemini?.models?.[0]?.id || ''))
       setGeminiModelOpen(false)
       setCohereModel(getInitialModel('cohere') || (PROVIDERS.cohere?.models?.[0]?.id || ''))
@@ -86,6 +92,9 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
       if (nvDropdownRef.current && !nvDropdownRef.current.contains(e.target)) {
         setNvModelOpen(false)
       }
+      if (agnesDropdownRef.current && !agnesDropdownRef.current.contains(e.target)) {
+        setAgnesModelOpen(false)
+      }
       if (geminiDropdownRef.current && !geminiDropdownRef.current.contains(e.target)) {
         setGeminiModelOpen(false)
       }
@@ -95,9 +104,12 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [langOpen, nvModelOpen, geminiModelOpen, cohereModelOpen])
+  }, [langOpen, nvModelOpen, agnesModelOpen, geminiModelOpen, cohereModelOpen])
 
   function handleSave() {
+    if (provider === 'agnes' && agnesModel) {
+      saveProviderModel('agnes', agnesModel)
+    }
     if (provider === 'gemini' && geminiModel) {
       saveProviderModel('gemini', geminiModel)
     }
@@ -133,6 +145,9 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
   // Get display model name for provider card
   function getModelDisplay(key, cfg) {
     if (!cfg.models) return cfg.model
+    if (key === 'agnes') {
+      return cfg.models.find(m => m.id === agnesModel)?.name || cfg.models[0]?.name || cfg.model
+    }
     if (key === 'gemini') {
       return cfg.models.find(m => m.id === geminiModel)?.name || cfg.models[0]?.name || cfg.model
     }
@@ -218,6 +233,45 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
             </ol>
           </div>
         </div>
+
+        {/* Agnes Model Selector */}
+        {provider === 'agnes' && PROVIDERS.agnes?.models && (
+          <div className={styles.section}>
+            <label className={styles.label}>Model Agnes AI</label>
+            <div className={styles.customSelect} ref={agnesDropdownRef}>
+              <button
+                type="button"
+                className={`${styles.selectTrigger} ${agnesModelOpen ? styles.selectOpen : ''}`}
+                onClick={() => setAgnesModelOpen(!agnesModelOpen)}
+              >
+                <span>{PROVIDERS.agnes.models.find((m) => m.id === agnesModel)?.name || PROVIDERS.agnes.models[0].name}</span>
+                <svg className={styles.selectChevron} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+              {agnesModelOpen && (
+                <div className={styles.selectDropdown}>
+                  {PROVIDERS.agnes.models.map((m) => (
+                    <button
+                      key={m.id}
+                      type="button"
+                      className={`${styles.selectOption} ${agnesModel === m.id ? styles.optionSelected : ''}`}
+                      onClick={() => { setAgnesModel(m.id); setAgnesModelOpen(false) }}
+                    >
+                      <span>{m.name}</span>
+                      {agnesModel === m.id && (
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <p className={styles.hint}>Pilih model Agnes AI gratisan. 🔥 2.0 Flash (Claw-Eval #9) jauh lebih pintar dari 1.5 Flash legacy.</p>
+          </div>
+        )}
 
         {/* Gemini Model Selector */}
         {provider === 'gemini' && PROVIDERS.gemini?.models && (
