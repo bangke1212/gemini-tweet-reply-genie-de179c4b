@@ -40,6 +40,10 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
   const [nvModelOpen, setNvModelOpen] = useState(false)
   const nvDropdownRef = useRef(null)
 
+  const [geminiModel, setGeminiModel] = useState('')
+  const [geminiModelOpen, setGeminiModelOpen] = useState(false)
+  const geminiDropdownRef = useRef(null)
+
   const [cohereModel, setCohereModel] = useState('')
   const [cohereModelOpen, setCohereModelOpen] = useState(false)
   const cohereDropdownRef = useRef(null)
@@ -57,6 +61,8 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
       setLangOpen(false)
       setNvidiaModel(getInitialModel('nvidia_free') || (PROVIDERS.nvidia_free?.models?.[0]?.id || ''))
       setNvModelOpen(false)
+      setGeminiModel(getInitialModel('gemini') || (PROVIDERS.gemini?.models?.[0]?.id || ''))
+      setGeminiModelOpen(false)
       setCohereModel(getInitialModel('cohere') || (PROVIDERS.cohere?.models?.[0]?.id || ''))
       setCohereModelOpen(false)
     }
@@ -80,15 +86,21 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
       if (nvDropdownRef.current && !nvDropdownRef.current.contains(e.target)) {
         setNvModelOpen(false)
       }
+      if (geminiDropdownRef.current && !geminiDropdownRef.current.contains(e.target)) {
+        setGeminiModelOpen(false)
+      }
       if (cohereDropdownRef.current && !cohereDropdownRef.current.contains(e.target)) {
         setCohereModelOpen(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [langOpen, nvModelOpen, cohereModelOpen])
+  }, [langOpen, nvModelOpen, geminiModelOpen, cohereModelOpen])
 
   function handleSave() {
+    if (provider === 'gemini' && geminiModel) {
+      saveProviderModel('gemini', geminiModel)
+    }
     if (provider === 'nvidia_free' && nvidiaModel) {
       saveNvidiaModel(nvidiaModel)
     }
@@ -121,6 +133,9 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
   // Get display model name for provider card
   function getModelDisplay(key, cfg) {
     if (!cfg.models) return cfg.model
+    if (key === 'gemini') {
+      return cfg.models.find(m => m.id === geminiModel)?.name || cfg.models[0]?.name || cfg.model
+    }
     if (key === 'nvidia_free') {
       return cfg.models.find(m => m.id === nvidiaModel)?.name || cfg.models[0]?.name || cfg.model
     }
@@ -203,6 +218,45 @@ export default function SettingsModal({ isOpen, onClose, onSave, currentSettings
             </ol>
           </div>
         </div>
+
+        {/* Gemini Model Selector */}
+        {provider === 'gemini' && PROVIDERS.gemini?.models && (
+          <div className={styles.section}>
+            <label className={styles.label}>Model Gemini</label>
+            <div className={styles.customSelect} ref={geminiDropdownRef}>
+              <button
+                type="button"
+                className={`${styles.selectTrigger} ${geminiModelOpen ? styles.selectOpen : ''}`}
+                onClick={() => setGeminiModelOpen(!geminiModelOpen)}
+              >
+                <span>{PROVIDERS.gemini.models.find((m) => m.id === geminiModel)?.name || PROVIDERS.gemini.models[0].name}</span>
+                <svg className={styles.selectChevron} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+              {geminiModelOpen && (
+                <div className={styles.selectDropdown}>
+                  {PROVIDERS.gemini.models.map((m) => (
+                    <button
+                      key={m.id}
+                      type="button"
+                      className={`${styles.selectOption} ${geminiModel === m.id ? styles.optionSelected : ''}`}
+                      onClick={() => { setGeminiModel(m.id); setGeminiModelOpen(false) }}
+                    >
+                      <span>{m.name}</span>
+                      {geminiModel === m.id && (
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <p className={styles.hint}>Pilih model Gemini gratis. ⭐ Flash 2.5 paling natural, 🧠 Pro untuk reasoning premium.</p>
+          </div>
+        )}
 
         {/* NVIDIA Free Model Selector */}
         {provider === 'nvidia_free' && PROVIDERS.nvidia_free?.models && (
